@@ -2,10 +2,210 @@
 <html>
 <head>
 <title>Title of the document</title>
+<meta charset="UTF-8">
+<link rel="stylesheet" type="text/css" href="css.css">
+<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 
-<body class="black">
-The content of the document......
+<body>
+<!--Nav Bar  -->
+<ul class="nav-bar">
+        <li>
+                <a href="#">Garage Door Company</a>
+        </li>
+        <li>
+                <a href="#" id="nav-doors">Doors</a>
+        </li>
+        <li id="logout-li">
+
+        </li>
+</ul>
+<!--login -->
+<div id="login-page">
+
+<h2>Login To Your Account </h2>
+
+<div class="form">
+  <div class="pad">
+    <label >Email Address:</label>
+    <input type="email" id="email"/>
+  </div>
+  <div class="pad">
+    <label >Password:</label>
+    <input type="password" id="pw"/>
+  </div>
+  <i><button id="forgot-pwd-btn">Forgot Password?</button></i><br />
+  <i><button id="create-account-btn">Create an Account</button></i>
+<br />
+<br />
+  <button class="no-dec-a" id="login-btn">Login</button>
+
+ </div>
+</div>
+<!--Create Account -->
+<div id="create-page">
+
+<h2>Create an Account! </h2>
+
+<div class="form">
+  <div class="pad">
+    <label >Email Address:</label>
+    <input type="email" id="email-registration"/>
+  </div>
+  <div class="pad">
+    <label >New Password:</label>
+    <input type="password" id="pw-registration"/>
+  </div>
+  <div class="pad">
+    <label >Confirm Password:</label>
+    <input type="password"/>
+  </div>
+  <div class="pad">
+    <label >Phone Number</label>
+    <input type="tel" class="form-control" id="phone-registration" />
+  </div>
+  <div class="pad">
+    <label>ID Number</label>
+    <input type="number" class="form-control" id="id-registration" />
+  </div>
+  <button class="no-dec-a" id="complete-creation-btn">Create Account</button>
+</div>
+
+</div>
+
+<!--Request New Password  -->
+
+<div id="request-page">
+  <h2>Request A New Password</h2>
+
+  <div class="form">
+
+  <label for="email">Email Address:</label>
+  <input type="email" id="request-email"/>
+  <button class="no-dec-a" id="request-pwd-btn">Request</button>
+  </div>
+</div>
+<!-- Reset the Password -->
+
+
+<!--Main Page  -->
+<div id="main-page">
+  <div class="card">
+        <div class="card-title" >
+                <h2 id="card-title"></h2></div>
+        <div class="card-status">
+                <table class="card-table">
+                        <tr>
+                                <td class="card-td fa-i">
+                                        <i class="fa fa-thermometer-empty" aria-hidden="true"></i>
+                                </td>
+                                <td class="card-td fa-i">
+                                        <i class="fa fa-tint" aria-hidden="true"></i>
+                                </td>
+                                <td class="card-td fa-i">
+                                        <i class="fa fa-male" aria-hidden="true"></i>
+
+                                </td>
+                        </tr>
+                        <tr>
+                                <td class="card-td">
+                                        <h2 id="temp-display">76f</h2>
+                                </td>
+                                <td class="card-td">
+                                        <h2 id="hum-display">44%</h2>
+                                </td>
+                                <td class="card-td">
+                                        <h2 id="motion-display">no</h2>
+                                </td>
+                        </tr>
+
+                </table>
+        </div>
+
+        <div class="card-btns" id="open">
+                <button class="no-dec-a" id="close-btn">Close</button>
+                <button class="no-dec-a" id="settings-btn">Settings</button>
+        </div>
+  </div>
+  <div class="card">
+    <h3 id="test"></h3>
+  </div>
+</div>
+
+<!--Edit Modals -->
+<div id="edit-page">
+  <div class="form-container">
+              <div>
+                      <label>Garage Name</label>
+                      <div>
+                              <input type="text" value="Garage Name" id="garage-name">
+                      </div>
+              </div>
+              <div>
+                      <label>Garage ID</label>
+                      <div>
+                              <input type="text" value="ID" id="garage-id">
+                      </div>
+              </div>
+              <div>
+
+
+                      <h3> Which Enviromental Sensors Do You Have?</h3>
+                      <label>
+            <input type="checkbox" id="temp-check">
+            Temperature
+          </label>
+                      <label>
+                <input type="checkbox" id="hum-check">
+                Humidity
+              </label>
+                      <label>
+                    <input type="checkbox" id="motion-check">
+                    Motion Sensing
+                  </label>
+
+              </div>
+<br />
+              <div>
+                      <label>How long should the door wait to auto close(mins)? (0 turns this off)</label>
+                      <div>
+                              <input class="num-input" type="number" value="10" id="example-number-input">
+                      </div>
+              </div>
+              <div>
+                      <label>Auto open door when you are how many yards away? (0 turns this off) </label>
+                      <div>
+                              <input class="yard-input" type="number" value="400" id="yard-input"> yards
+                      </div>
+              </div>
+              <div>
+
+
+                      <h3>Mobile Alerts?</h3>
+                      <label>
+                    <input type="checkbox" id="door-opens-check">
+                    Door Opens
+                  </label>
+                      <label>
+                        <input type="checkbox" id="door-closes-check" >
+                        Door Closes
+                      </label>
+                      <br />
+                      <label>
+                            <input type="checkbox" id="door-open-check">
+                            Door Open For:
+                          </label>
+                          <input class="num-input" type="number" value="10" > <label>mins</label>
+
+              </div>
+              <button class="no-dec-a" id="save-btn">Save Changes</button>
+      </div>
+
+</div>
+<script src="javascript.js"></script>
+<script src="particle.js"></script>
+
 </body>
+
 
 </html>

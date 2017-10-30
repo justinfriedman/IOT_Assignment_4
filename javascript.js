@@ -17,6 +17,14 @@ particle.login({username: 'jordangonen1@gmail.com', password: 'password'}).then(
   }
 );
 
+particle.getEventStream({ auth: token}).then(function(stream) {
+  stream.on('data', function(data) {
+    console.log("test: ", data);
+  });
+});
+
+
+
 
 
 

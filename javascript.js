@@ -4,6 +4,20 @@ var currentView; //current display
 var newUser = false; //has a new user been created?
 
 
+var particle = new Particle();
+var token = "7c83775c4059f279dac14fd2b15424b79ea336ba"; // from result of particle.login
+var devicesPr = particle.listDevices({ auth: token });
+
+devicesPr.then(
+  function(devices){
+    console.log('Devices: ', devices);
+  },
+  function(err) {
+    console.log('List devices call failed: ', err);
+  }
+);
+
+
 //array of user account objects
 var users = [
 

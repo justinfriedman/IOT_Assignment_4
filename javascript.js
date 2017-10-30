@@ -6,16 +6,19 @@ var newUser = false; //has a new user been created?
 
 var particle = new Particle();
 var token = "7c83775c4059f279dac14fd2b15424b79ea336ba"; // from result of particle.login
-var devicesPr = particle.listDevices({ auth: token });
 
-devicesPr.then(
-  function(devices){
-    console.log('Devices: ', devices);
+particle.login({username: 'jordangonen1@gmail.com', password: 'password'}).then(
+  function(data) {
+    token = data.body.access_token;
+    console.log('we logged in');
   },
-  function(err) {
-    console.log('List devices call failed: ', err);
+  function (err) {
+    console.log('Could not log in.', err);
   }
 );
+
+
+
 
 
 //array of user account objects

@@ -94,8 +94,9 @@
 <div id="main-page">
   <div class="card">
         <div class="card-title" >
-                <h2 id="card-title"></h2></div>
-        <div class="card-status">
+                <h2 id="card-title">Door is Open</h2>
+          </div>
+        <!-- <div class="card-status">
                 <table class="card-table">
                         <tr>
                                 <td class="card-td fa-i">
@@ -122,15 +123,26 @@
                         </tr>
 
                 </table>
-        </div>
+        </div> -->
 
         <div class="card-btns" id="open">
                 <button class="no-dec-a" id="close-btn">Close</button>
-                <button class="no-dec-a" id="settings-btn">Settings</button>
+                <!-- <button class="no-dec-a" id="settings-btn">Settings</button> -->
         </div>
-  </div>
-  <div class="card">
-    <h3 id="title">test</h3>
+
+    <div id="settings_panel">
+          <h3 class="center">Settings</h3>
+            <button id="enable_auto">Enable Auto Close</button>
+    <div id="settings_module">
+          <label>How long should the door wait to auto close (seconds) ? </label>
+        <div id="give_padding">
+          <input class="num-input" type="number" min="2" max="100" value="2" id="example-number-input">
+          <button id="save_setting">Save</button>
+          <button id="turn_off">Turn Off</button>
+        </div>
+    </div>
+
+    </div>
   </div>
 </div>
 

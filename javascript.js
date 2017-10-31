@@ -3,11 +3,14 @@ var user1; //user object for the session
 var currentView; //current display
 var newUser = false; //has a new user been created?
 
-
+// assignment 4
 var particle = new Particle();
 var token = "cba25a0bf2c155b90232ef035aff69dda6a66c59"; // from result of particle.login
+var username = 'justinfriedman22@gmail.com';
+var password = 'photonFun12';
+var deviceId = '240035001347343438323536';
 
-particle.login({username: 'justinfriedman22@gmail.com', password: 'photonFun12'}).then(
+particle.login({username: username , password: password}).then(
   function(data) {
     token = data.body.access_token;
     console.log('we logged in');
@@ -17,7 +20,7 @@ particle.login({username: 'justinfriedman22@gmail.com', password: 'photonFun12'}
   }
 );
 
-particle.getEventStream({ deviceId: '240035001347343438323536', auth: token }).then(function(stream) {
+particle.getEventStream({ deviceId: deviceId, auth: token }).then(function(stream) {
   stream.on('state', stateMover);
 });
 
@@ -32,47 +35,64 @@ function stateMover(data) {
 
   // green rgb(65, 159, 49)
   // red rgb(247, 47, 47)
+  // waiting 'rgb(247, 231, 12)'
 
   switch (currentStateDoor) {
     case "0":
-      console.log("Closed");
-      // document.getElementById('close-btn').innerHTML = "Open";
-      // document.getElementById('open').style.backgroundColor  = '';//closed color
+      console.log("Down");
+      document.getElementById('card-title').innerHTML = "Door is Down";
+      document.getElementById('close-btn').innerHTML = "Open";
+      document.getElementById('open').style.backgroundColor  = 'rgb(65, 159, 49)' ;
     break;
+
     case "1":
       console.log("Going Down");
+      document.getElementById('card-title').innerHTML = "Door is Going Down";
+      document.getElementById('close-btn').innerHTML = "Stop";
+      document.getElementById('open').style.backgroundColor  = 'rgb(247, 231, 12)' ;
       // document.getElementById('close-btn').innerHTML = "Close";
     break;
 
     case "2":
       console.log("Going Up");
-      // document.getElementById('open').style.backgroundColor  = 'rgb(247, 231, 12)';//waiting color
+      document.getElementById('card-title').innerHTML = "Door is Going Up";
+      document.getElementById('close-btn').innerHTML = "Stop";
+      document.getElementById('open').style.backgroundColor  = 'rgb(247, 231, 12)' ;
     break;
 
     case "3":
       console.log("Up");
-      // document.getElementById('open').style.backgroundColor  = 'rgb(247, 231, 12)';
+      document.getElementById('card-title').innerHTML = "Door is Up";
+      document.getElementById('close-btn').innerHTML = "Close";
+      document.getElementById('open').style.backgroundColor  = 'rgb(247, 47, 47)' ;
     break;
 
     case "4":
       console.log("Stopped Up");
-      // document.getElementById('open').style.backgroundColor  = 'rgb(247, 231, 12)';
+      document.getElementById('card-title').innerHTML = "Door is Stopped Going Up";
+      document.getElementById('close-btn').innerHTML = "Resume";
+      document.getElementById('open').style.backgroundColor  = 'rgb(247, 231, 12)' ;
     break;
 
     case "5":
       console.log("Stopped Down");
-      // document.getElementById('open').style.backgroundColor  = 'rgb(247, 231, 12)';
+      document.getElementById('card-title').innerHTML = "Door is Stopped Going Down";
+      document.getElementById('close-btn').innerHTML = "Resume";
+      document.getElementById('open').style.backgroundColor  = 'rgb(247, 231, 12)' ;
     break;
     case "6":
-      console.log("Stopped Down");
+      console.log("Stopped Error");
     break;
     default:
       console.log("loading");
+      document.getElementById('card-title').innerHTML = "Door is Loading";
+      document.getElementById('close-btn').display = "Loading";
+      document.getElementById('open').style.backgroundColor  = white ;
   }
 }
 
 
-var moveState = particle.callFunction({ deviceId: '240035001347343438323536', name: 'internetButton', argument:'10', auth: token });
+var moveState = particle.callFunction({ deviceId: deviceId, name: 'internetButton', argument:'10', auth: token });
 
 
 document.getElementById("close-btn").addEventListener("click", function() {
@@ -83,6 +103,28 @@ document.getElementById("close-btn").addEventListener("click", function() {
           console.log('An error occurred:', err);
         });
       });
+
+
+document.getElementById("enable_auto").addEventListener("click", function() {
+      //  displayElement(enable_auto,settings_module);
+      document.getElementById("settings_module").style.display ="block";
+      document.getElementById("enable_auto").style.display ="none";
+});
+
+document.getElementById("turn_off").addEventListener("click", function() {
+      //  displayElement(enable_auto,settings_module);
+      document.getElementById("settings_module").style.display ="none";
+      document.getElementById("enable_auto").style.display ="block";
+});
+
+document.getElementById("save_setting").addEventListener("click", function() {
+      //  displayElement(enable_auto,settings_module);
+
+});
+
+
+
+
 
 
 
@@ -376,9 +418,9 @@ document.getElementById("request-pwd-btn").addEventListener("click", function() 
 });
 
 
-document.getElementById("settings-btn").addEventListener("click", function() {
-    displayElement("main-page","edit-page");
-});
+// document.getElementById("settings-btn").addEventListener("click", function() {
+//     displayElement("main-page","edit-page");
+// });
 document.getElementById("save-btn").addEventListener("click", function() {
         sensorDisplay();
     displayElement("edit-page","main-page");

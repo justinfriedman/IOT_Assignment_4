@@ -16,17 +16,18 @@ particle.login({username: 'jordangonen1@gmail.com', password: 'password'}).then(
     console.log('Could not log in.', err);
   }
 );
+function off() {
+  document.getElementById('title').style.backgroundColor = 'rgb(65, 159, 49)';
+}
+function on() {
+  document.getElementById('title').style.backgroundColor = 'rgb(219,112,147)';
+}
 
-particle.getEventStream({ auth: token}).then(function(stream) {
-  stream.on('data', function(data) {
-    console.log("test: ", data);
-  });
-});
+particle.getEventStream({ deviceId: '2e0060000e51353338363333', auth: token }).then(function(stream) {
+  stream.on('open', on);
+  stream.on('closed', off)});
 
-
-
-
-
+  //  console.log("open: ", data);});
 
 
 //array of user account objects

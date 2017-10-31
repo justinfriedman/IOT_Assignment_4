@@ -16,16 +16,50 @@ particle.login({username: 'jordangonen1@gmail.com', password: 'password'}).then(
     console.log('Could not log in.', err);
   }
 );
-function off() {
+function off(data) {
   document.getElementById('title').style.backgroundColor = 'rgb(65, 159, 49)';
 }
 function on() {
   document.getElementById('title').style.backgroundColor = 'rgb(219,112,147)';
 }
+var data = [
+    {
+    "name":"Up",
+    "data":"5:28:54",
+    "ttl":"60",
+    "published_at":"2014-MM-DDTHH:mm:ss.000Z",
+    "coreid":"012345678901234567890123"
+    }
+]
 
 particle.getEventStream({ deviceId: '2e0060000e51353338363333', auth: token }).then(function(stream) {
-  stream.on('open', on);
-  stream.on('closed', off)});
+  stream.on('state', stateMover(data));
+  // stream.on('closed', off)
+});
+
+var name;
+function stateMover(data) {
+  var name = data[0].name;
+    if(name == "Up") {
+      document.getElementById('title').style.backgroundColor = 'rgb(219,112,147)';
+    }
+    else if(name == "Going Up") {
+      document.getElementById('title').style.backgroundColor = 'rgb(65, 159, 49)';
+    }
+    else if(name == "Closed") {
+
+    }
+    else if(name == "Going Down") {
+
+    }
+    else if(name == "Error") {
+
+    }
+
+
+
+
+}
 
   //  console.log("open: ", data);});
 
@@ -88,8 +122,6 @@ var users = [
                 }
         }
 
-
-
 ];
 
 
@@ -107,8 +139,6 @@ function mainSetter() {
         if (user1.door.state == 3) {
                 document.getElementById('open').style.backgroundColor = 'rgb(247, 47, 47)';
         }
-
-
 
 }
 

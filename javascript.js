@@ -5,9 +5,9 @@ var newUser = false; //has a new user been created?
 
 
 var particle = new Particle();
-var token = "7c83775c4059f279dac14fd2b15424b79ea336ba"; // from result of particle.login
+var token = "cba25a0bf2c155b90232ef035aff69dda6a66c59"; // from result of particle.login
 
-particle.login({username: 'jordangonen1@gmail.com', password: 'password'}).then(
+particle.login({username: 'justinfriedman22@gmail.com', password: 'photonFun12'}).then(
   function(data) {
     token = data.body.access_token;
     console.log('we logged in');
@@ -17,59 +17,72 @@ particle.login({username: 'jordangonen1@gmail.com', password: 'password'}).then(
   }
 );
 
-var data = [
-    {
-    "name":"Up",
-    "data":"5:28:54",
-    "ttl":"60",
-    "published_at":"2014-MM-DDTHH:mm:ss.000Z",
-    "coreid":"012345678901234567890123"
-    }
-]
-
-particle.getEventStream({ deviceId: '2e0060000e51353338363333', auth: token }).then(function(stream) {
-  stream.on('state', stateMover(data));
-  // stream.on('closed', off)
+particle.getEventStream({ deviceId: '240035001347343438323536', auth: token }).then(function(stream) {
+  stream.on('state', stateMover);
 });
 
 var name;
+var currentDoorState;
+
 function stateMover(data) {
-  var name = data[0].name;
-    if(name == "Up") {
-      console.log("up");
-      document.getElementById('close-btn').innerHTML = "Open"
+  currentStateDoor = data.data;
+  console.log(currentStateDoor);
 
-    }
-    else if(name == "Going Up") {
-      name = "Going Up"
-      document.getElementById('open').style.backgroundColor  = 'rgb(247, 231, 12)';//waiting color
-      setTimeout(function(){ document.getElementById('open').style.backgroundColor  = 'rgb(247, 47, 49)';
-      name = "Up";
+  // console.log(data.data);
 
-      }, 5000);
+  // green rgb(65, 159, 49)
+  // red rgb(247, 47, 47)
 
-    }
-    else if(name == "Closed") {
-      document.getElementById('close-btn').innerHTML = "Close"
+  switch (currentStateDoor) {
+    case "0":
+      console.log("Closed");
+      // document.getElementById('close-btn').innerHTML = "Open";
+      // document.getElementById('open').style.backgroundColor  = '';//closed color
+    break;
+    case "1":
+      console.log("Going Down");
+      // document.getElementById('close-btn').innerHTML = "Close";
+    break;
 
+    case "2":
+      console.log("Going Up");
+      // document.getElementById('open').style.backgroundColor  = 'rgb(247, 231, 12)';//waiting color
+    break;
 
-    }
-    else if(name == "Going Down") {
-      name = "Going Down";
-      document.getElementById('open').style.backgroundColor  = 'rgb(247, 231, 12)';
-      setTimeout(function(){ document.getElementById('open').style.backgroundColor  = 'rgb(65, 159, 49)';
-      name = "Down";
+    case "3":
+      console.log("Up");
+      // document.getElementById('open').style.backgroundColor  = 'rgb(247, 231, 12)';
+    break;
 
+    case "4":
+      console.log("Stopped Up");
+      // document.getElementById('open').style.backgroundColor  = 'rgb(247, 231, 12)';
+    break;
 
-      }, 5000);
-
-    }
-    else if(name == "Error") {
-
-    }
+    case "5":
+      console.log("Stopped Down");
+      // document.getElementById('open').style.backgroundColor  = 'rgb(247, 231, 12)';
+    break;
+    case "6":
+      console.log("Stopped Down");
+    break;
+    default:
+      console.log("loading");
+  }
 }
 
 
+var moveState = particle.callFunction({ deviceId: '240035001347343438323536', name: 'internetButton', argument:'10', auth: token });
+
+
+document.getElementById("close-btn").addEventListener("click", function() {
+        moveState.then(
+        function(data) {
+          console.log('Function called succesfully:', data);
+        }, function(err) {
+          console.log('An error occurred:', err);
+        });
+      });
 
 
 
@@ -154,27 +167,27 @@ function mainSetter() {
 
 }
 
-function titleSetter() { //initilizes the page title
-        if (user1.door.state == 0) {
-                stateName = "Down";
-                document.getElementById('close-btn').innerHTML = "Open"
-        }
-
-        if (user1.door.state == 3) {
-                stateName = "Up";
-                document.getElementById('close-btn').innerHTML = "Close"
-        }
-        if (user1.door.state == 1) {
-                stateName = "Goin Up";
-
-        }
-        if (user1.door.state == 2) {
-                stateName = "Going Down";
-
-        }
-        document.getElementById('card-title').innerHTML = "Door is " + stateName;
-
-}
+// function titleSetter() { //initilizes the page title
+//         if (user1.door.state == 0) {
+//                 stateName = "Down";
+//                 document.getElementById('close-btn').innerHTML = "Open"
+//         }
+//
+//         if (user1.door.state == 3) {
+//                 stateName = "Up";
+//                 document.getElementById('close-btn').innerHTML = "Close"
+//         }
+//         if (user1.door.state == 1) {
+//                 stateName = "Goin Up";
+//
+//         }
+//         if (user1.door.state == 2) {
+//                 stateName = "Going Down";
+//
+//         }
+//         document.getElementById('card-title').innerHTML = "Door is " + stateName;
+//
+// }
 
 function settingsSetter() { //initilies the settings states
         document.getElementById('garage-name').value =user1.settings.name;
@@ -377,7 +390,7 @@ document.getElementById('nav-doors').addEventListener('click', function() {
 
 });
 document.getElementById("close-btn").addEventListener("click", function() {
-    stateChange();
+    // stateChange();
 });
 
 // document.getElementById("back-to-main").addEventListener("click", function() {
@@ -389,39 +402,39 @@ document.getElementById("close-btn").addEventListener("click", function() {
 
 
 // state change animation function for door open and close
-function stateChange() {
-        //
-        // green rgb(65, 159, 49)
-        // red rgb(247, 47, 47)
-        if (user1.door.state == 0) { //down to up animation
-                user1.door.state = 1;
-                console.log(user1.door.state);
-                titleSetter();
-
-                document.getElementById('open').style.backgroundColor  = 'rgb(247, 231, 12)';//waiting color
-
-                setTimeout(function(){ document.getElementById('open').style.backgroundColor  = 'rgb(247, 47, 49)';
-                user1.door.state = 3;
-                console.log(user1.door.state);
-                titleSetter();
-
-                }, 5000);
-
-        }
-        if (user1.door.state == 3) { // up to down animation
-                user1.door.state = 2;
-                titleSetter();
-                document.getElementById('open').style.backgroundColor  = 'rgb(247, 231, 12)';
-
-                setTimeout(function(){ document.getElementById('open').style.backgroundColor  = 'rgb(65, 159, 49)';
-                user1.door.state = 0;
-                titleSetter();
-
-                }, 5000);
-
-        }
-
-}
+// function stateChange() {
+//         //
+//         // green rgb(65, 159, 49)
+//         // red rgb(247, 47, 47)
+//         if (user1.door.state == 0) { //down to up animation
+//                 user1.door.state = 1;
+//                 console.log(user1.door.state);
+//                 titleSetter();
+//
+//                 document.getElementById('open').style.backgroundColor  = 'rgb(247, 231, 12)';//waiting color
+//
+//                 setTimeout(function(){ document.getElementById('open').style.backgroundColor  = 'rgb(247, 47, 49)';
+//                 user1.door.state = 3;
+//                 console.log(user1.door.state);
+//                 titleSetter();
+//
+//                 }, 5000);
+//
+//         }
+//         if (user1.door.state == 3) { // up to down animation
+//                 user1.door.state = 2;
+//                 titleSetter();
+//                 document.getElementById('open').style.backgroundColor  = 'rgb(247, 231, 12)';
+//
+//                 setTimeout(function(){ document.getElementById('open').style.backgroundColor  = 'rgb(65, 159, 49)';
+//                 user1.door.state = 0;
+//                 titleSetter();
+//
+//                 }, 5000);
+//
+//         }
+//
+// }
 
 //retrive forgoten passwords
 

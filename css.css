@@ -19,6 +19,10 @@ body {
 #save-button {
   margin-top: 10px;
 }
+#offButton {
+  display:none;
+  margin-top: 10px;
+}
 
 #settings_module {
   display: none;
@@ -26,9 +30,13 @@ body {
 #give_padding {
   margin-top: 5%;
 }
+#example-number-input {
+  width: 20%;
+}
 
 .center {
   text-align: center;
+
 }
 
 .nav-bar li {
@@ -50,7 +58,9 @@ body {
 }
 
 
+#autoState {
 
+}
 
 /*Card*/
 

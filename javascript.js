@@ -67,35 +67,36 @@ function stateMover(data) {
       document.getElementById('open').style.backgroundColor  = 'rgb(247, 47, 47)' ;
     break;
 
-    case "4":
+    case "5":
       console.log("Stopped Up");
       document.getElementById('card-title').innerHTML = "Door is Stopped Going Up";
       document.getElementById('close-btn').innerHTML = "Resume";
       document.getElementById('open').style.backgroundColor  = 'rgb(247, 231, 12)' ;
     break;
 
-    case "5":
+    case "4":
       console.log("Stopped Down");
       document.getElementById('card-title').innerHTML = "Door is Stopped Going Down";
       document.getElementById('close-btn').innerHTML = "Resume";
       document.getElementById('open').style.backgroundColor  = 'rgb(247, 231, 12)' ;
     break;
     case "6":
-      console.log("Stopped Error");
+      console.log("Stopped");
+      document.getElementById('open').style.backgroundColor  = 'rgb(70,130,180)';
+      document.getElementById('card-title').innerHTML = "ERROR";
+      document.getElementById('close-btn').innerHTML = "PRESS TO FIX";
     break;
-    default:
-      console.log("loading");
-      document.getElementById('card-title').innerHTML = "Door is Loading";
-      document.getElementById('close-btn').display = "Loading";
-      document.getElementById('open').style.backgroundColor  = white ;
+    // default:
+    //   console.log("loading");
+    //   document.getElementById('card-title').innerHTML = "Door is Loading";
+    //   document.getElementById('close-btn').display = "Loading";
+    //   document.getElementById('open').style.backgroundColor  = white ;
   }
 }
 
 
-var moveState = particle.callFunction({ deviceId: deviceId, name: 'internetButton', argument:'10', auth: token });
-
-
 document.getElementById("close-btn").addEventListener("click", function() {
+        var moveState = particle.callFunction({ deviceId: deviceId, name: 'webButton', argument:'press', auth: token });
         moveState.then(
         function(data) {
           console.log('Function called succesfully:', data);
@@ -105,22 +106,45 @@ document.getElementById("close-btn").addEventListener("click", function() {
       });
 
 
+
+var timeValue;
+var autoTimer = false;
 document.getElementById("enable_auto").addEventListener("click", function() {
       //  displayElement(enable_auto,settings_module);
       document.getElementById("settings_module").style.display ="block";
       document.getElementById("enable_auto").style.display ="none";
+
 });
 
 document.getElementById("turn_off").addEventListener("click", function() {
       //  displayElement(enable_auto,settings_module);
+      autoTimer = false;
       document.getElementById("settings_module").style.display ="none";
       document.getElementById("enable_auto").style.display ="block";
+      document.getElementById("autoState").innerHTML ="AutoClose is Off";
+      document.getElementById("offButton").style.display ="none";
+
 });
 
 document.getElementById("save_setting").addEventListener("click", function() {
       //  displayElement(enable_auto,settings_module);
+      autoTimer = true;
+      timeValue = document.getElementById("example-number-input").value ;
+      document.getElementById("autoState").innerHTML ="AutoClose is On";
+      document.getElementById("offButton").style.display ="block";
+      document.getElementById("save_setting").innerHTML ="Update";
+
 
 });
+
+function startAutoTimer(timeValue) {
+  while(autoTimer == true) {
+// timer for time value
+// then send close
+  }
+}
+
+
 
 
 

@@ -66,25 +66,23 @@ function stateMover(data) {
       document.getElementById('close-btn').innerHTML = "Close";
       document.getElementById('open').style.backgroundColor  = 'rgb(247, 47, 47)' ;
     break;
-
-    case "5":
-      console.log("Stopped Up");
-      document.getElementById('card-title').innerHTML = "Door is Stopped Going Up";
-      document.getElementById('close-btn').innerHTML = "Resume";
-      document.getElementById('open').style.backgroundColor  = 'rgb(247, 231, 12)' ;
-    break;
-
     case "4":
       console.log("Stopped Down");
       document.getElementById('card-title').innerHTML = "Door is Stopped Going Down";
       document.getElementById('close-btn').innerHTML = "Resume";
       document.getElementById('open').style.backgroundColor  = 'rgb(247, 231, 12)' ;
     break;
+    case "5":
+      console.log("Stopped Up");
+      document.getElementById('card-title').innerHTML = "Door is Stopped Going Up";
+      document.getElementById('close-btn').innerHTML = "Resume";
+      document.getElementById('open').style.backgroundColor  = 'rgb(247, 231, 12)' ;
+    break;
     case "6":
       console.log("Stopped");
-      document.getElementById('open').style.backgroundColor  = 'rgb(70,130,180)';
       document.getElementById('card-title').innerHTML = "ERROR";
       document.getElementById('close-btn').innerHTML = "PRESS TO FIX";
+      document.getElementById('open').style.backgroundColor  = 'rgb(70,130,180)';
     break;
     // default:
     //   console.log("loading");

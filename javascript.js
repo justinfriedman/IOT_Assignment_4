@@ -16,12 +16,7 @@ particle.login({username: 'jordangonen1@gmail.com', password: 'password'}).then(
     console.log('Could not log in.', err);
   }
 );
-function off(data) {
-  document.getElementById('title').style.backgroundColor = 'rgb(65, 159, 49)';
-}
-function on() {
-  document.getElementById('title').style.backgroundColor = 'rgb(219,112,147)';
-}
+
 var data = [
     {
     "name":"Up",
@@ -41,25 +36,42 @@ var name;
 function stateMover(data) {
   var name = data[0].name;
     if(name == "Up") {
-      document.getElementById('title').style.backgroundColor = 'rgb(219,112,147)';
+      console.log("up");
+      document.getElementById('close-btn').innerHTML = "Open"
+
     }
     else if(name == "Going Up") {
-      document.getElementById('title').style.backgroundColor = 'rgb(65, 159, 49)';
+      name = "Going Up"
+      document.getElementById('open').style.backgroundColor  = 'rgb(247, 231, 12)';//waiting color
+      setTimeout(function(){ document.getElementById('open').style.backgroundColor  = 'rgb(247, 47, 49)';
+      name = "Up";
+
+      }, 5000);
+
     }
     else if(name == "Closed") {
+      document.getElementById('close-btn').innerHTML = "Close"
+
 
     }
     else if(name == "Going Down") {
+      name = "Going Down";
+      document.getElementById('open').style.backgroundColor  = 'rgb(247, 231, 12)';
+      setTimeout(function(){ document.getElementById('open').style.backgroundColor  = 'rgb(65, 159, 49)';
+      name = "Down";
+
+
+      }, 5000);
 
     }
     else if(name == "Error") {
 
     }
-
-
-
-
 }
+
+
+
+
 
   //  console.log("open: ", data);});
 

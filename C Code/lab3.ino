@@ -8,9 +8,9 @@
 
 void setup() {
     setupHardware(); // from API
-  
+
 }
- 
+
 void loop() {
    fault();
    atTop();
@@ -19,5 +19,3 @@ void loop() {
    deltaTimingTrigger();
    endFault();
 }
-
-

@@ -96,9 +96,8 @@ var argument;
 document.getElementById("close-btn").addEventListener("click", function() {
 if(currentStateDoor==6) {
   argument="errorPress";
-
 } else {
-  argument = "Press"
+  argument = "Press";
 }
 
         var moveState = particle.callFunction({ deviceId: deviceId, name: 'webButton', argument:argument, auth: token });

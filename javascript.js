@@ -2,7 +2,7 @@
 var user1; //user object for the session
 var currentView; //current display
 var newUser = false; //has a new user been created?
-
+var timer;
 // assignment 4
 var particle = new Particle();
 var token = "cba25a0bf2c155b90232ef035aff69dda6a66c59"; // from result of particle.login
@@ -71,6 +71,7 @@ function stateMover(data) {
       document.getElementById('card-title').innerHTML = "Door is Going Down";
       document.getElementById('close-btn').innerHTML = "Stop";
       document.getElementById('open').style.backgroundColor  = 'rgb(247, 231, 12)' ;
+      clearTimeout(timer);
       // document.getElementById('close-btn').innerHTML = "Close";
     break;
 
@@ -86,6 +87,10 @@ function stateMover(data) {
       document.getElementById('card-title').innerHTML = "Door is Up";
       document.getElementById('close-btn').innerHTML = "Close";
       document.getElementById('open').style.backgroundColor  = 'rgb(247, 47, 47)' ;
+      if (autoTimer == true) {
+             timer = setTimeout(autoClose, timeValue*1000);
+      }
+
     break;
     case "4":
       console.log("Stopped Down");
@@ -104,6 +109,7 @@ function stateMover(data) {
       document.getElementById('card-title').innerHTML = "ERROR";
       document.getElementById('close-btn').innerHTML = "PRESS TO FIX";
       document.getElementById('open').style.backgroundColor  = 'rgb(70,130,180)';
+      clearTimeout(timer);
     break;
     // default:
     //   console.log("loading");
@@ -167,6 +173,17 @@ function startAutoTimer(timeValue) {
 // timer for time value
 // then send close
   }
+}
+
+function autoClose() {
+        argument = "press";
+        var moveState = particle.callFunction({ deviceId: deviceId, name: 'webButton', argument:argument, auth: token });
+        moveState.then(
+        function(data) {
+          console.log('Function called succesfully:', data);
+        }, function(err) {
+          console.log('An error occurred:', err);
+        });
 }
 
 

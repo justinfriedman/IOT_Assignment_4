@@ -11,25 +11,27 @@ var password = 'photonFun12';
 var deviceId = '240035001347343438323536';
 
 
-
+// login to the device (sends our stored username/pw info^ )
 particle.login({username: username , password: password}).then(
   function(data) {
     token = data.body.access_token;
+    // hey we logged in!
     console.log('we logged in');
   },
   function (err) {
     console.log('Could not log in.', err);
   }
 );
-
+// finds incoming stream "state" and calls function stateMover
 particle.getEventStream({ deviceId: deviceId, auth: token }).then(function(stream) {
   stream.on('state', stateMover);
 });
-
+// ensures that you cannot press the ui until we receive the data
 document.getElementById("card").style.display == "none";
 console.log("waiting");
 
 var fsmCalled = false;
+// get the currentStateDoor from varState as soon as it gets connected
 particle.getVariable({ deviceId: deviceId, name: "varState", auth: token }).then(function(data) {
   // console.log('Device variable retrieved successfully:', data);
   stateMover(data);
@@ -37,21 +39,25 @@ particle.getVariable({ deviceId: deviceId, name: "varState", auth: token }).then
   console.log("received data");
   // stateMover(currentStateDoor);
   console.log(currentStateDoor);
-
+// if an error occurs
 }, function(err) {
   // console.log('An error occurred while getting attrs:', err);
 });
 
 var name;
 var currentStateDoor;
-
+// statemover function that is called when eventStream is received
 function stateMover(data) {
+  // if we've already called the door , just use data.data
   if(fsmCalled == true) {
     currentStateDoor = data.data;
   }
+  // if we have not already called the door (meaning this is the first time) , use data.body.result and convert it to a string
   if(fsmCalled == false) {
+    // set state of FSM = true
     fsmCalled = true;
     currentStateDoor = data.body.result;
+    // convert to a string
     currentStateDoor = currentStateDoor.toString();
   }
 
@@ -61,54 +67,70 @@ function stateMover(data) {
   // red rgb(247, 47, 47)
   // waiting 'rgb(247, 231, 12)'
 
+//finite state machine with our current state of door
   switch (currentStateDoor) {
+    // down state
     case "0":
       console.log("Down");
+      // html updates
       document.getElementById('card-title').innerHTML = "Door is Down";
       document.getElementById('close-btn').innerHTML = "Open";
       document.getElementById('open').style.backgroundColor  = 'rgb(65, 159, 49)' ;
     break;
-
+//going down state
     case "1":
       console.log("Going Down");
+
+      // html updates
       document.getElementById('card-title').innerHTML = "Door is Going Down";
       document.getElementById('close-btn').innerHTML = "Stop";
       document.getElementById('open').style.backgroundColor  = 'rgb(247, 231, 12)' ;
       clearTimeout(timer);
       // document.getElementById('close-btn').innerHTML = "Close";
     break;
-
+// going up state
     case "2":
       console.log("Going Up");
+      // html updates
       document.getElementById('card-title').innerHTML = "Door is Going Up";
       document.getElementById('close-btn').innerHTML = "Stop";
       document.getElementById('open').style.backgroundColor  = 'rgb(247, 231, 12)' ;
     break;
-
+// up state
     case "3":
       console.log("Up");
+      //html/css updates
       document.getElementById('card-title').innerHTML = "Door is Up";
       document.getElementById('close-btn').innerHTML = "Close";
       document.getElementById('open').style.backgroundColor  = 'rgb(247, 47, 47)' ;
+      // if up, you can have the timer called
       if (autoTimer == true) {
              timer = setTimeout(autoClose, timeValue*1000);
       }
 
+
     break;
+
+    // stopped down state
     case "4":
       console.log("Stopped Down");
+      //html/css updates
       document.getElementById('card-title').innerHTML = "Door is Stopped Going Down";
       document.getElementById('close-btn').innerHTML = "Resume";
       document.getElementById('open').style.backgroundColor  = 'rgb(247, 231, 12)' ;
     break;
+    // stopped up state
     case "5":
       console.log("Stopped Up");
+      //html/css updates
       document.getElementById('card-title').innerHTML = "Door is Stopped Going Up";
       document.getElementById('close-btn').innerHTML = "Resume";
       document.getElementById('open').style.backgroundColor  = 'rgb(247, 231, 12)' ;
     break;
+    //error state
     case "6":
       console.log("Error");
+      //html/css updates
       document.getElementById('card-title').innerHTML = "ERROR";
       document.getElementById('close-btn').innerHTML = "PRESS TO FIX";
       document.getElementById('open').style.backgroundColor  = 'rgb(70,130,180)';
@@ -123,13 +145,16 @@ function stateMover(data) {
 }
 
 var argument;
+// if error button is getting pressed
 document.getElementById("close-btn").addEventListener("click", function() {
 if(currentStateDoor==6) {
+  // set equal to error press to pass through the call function
   argument="errorPress";
 } else {
+  // leave as just press
   argument = "press";
 }
-
+// callFunction WebButton (in C) when we have a press (if error, use Error press then)
         var moveState = particle.callFunction({ deviceId: deviceId, name: 'webButton', argument:argument, auth: token });
         moveState.then(
         function(data) {
@@ -140,30 +165,34 @@ if(currentStateDoor==6) {
       });
 
 
-
 var timeValue;
 var autoTimer = false;
+// moves the javascript for settings to show the autocloser
 document.getElementById("enable_auto").addEventListener("click", function() {
       //  displayElement(enable_auto,settings_module);
       document.getElementById("settings_module").style.display ="block";
       document.getElementById("enable_auto").style.display ="none";
-
 });
-
+// turns off the auto closer
 document.getElementById("turn_off").addEventListener("click", function() {
       //  displayElement(enable_auto,settings_module);
+      // sets state of the autoTimer
       autoTimer = false;
+      // html updates
       document.getElementById("settings_module").style.display ="none";
       document.getElementById("enable_auto").style.display ="block";
       document.getElementById("autoState").innerHTML ="AutoClose is Off";
       document.getElementById("offButton").style.display ="none";
 
 });
-
+// saves / updates the autocloser
 document.getElementById("save_setting").addEventListener("click", function() {
       //  displayElement(enable_auto,settings_module);
+      // sets state of the AutoTimer
       autoTimer = true;
+      //pulls the value
       timeValue = document.getElementById("example-number-input").value ;
+      // html updates
       document.getElementById("autoState").innerHTML ="AutoClose is On";
       document.getElementById("offButton").style.display ="block";
       document.getElementById("save_setting").innerHTML ="Update";
@@ -177,9 +206,10 @@ function startAutoTimer(timeValue) {
 // then send close
   }
 }
-
+// runs the autoClose function
 function autoClose() {
         argument = "press";
+        // calls the web button function on pres
         var moveState = particle.callFunction({ deviceId: deviceId, name: 'webButton', argument:argument, auth: token });
         moveState.then(
         function(data) {

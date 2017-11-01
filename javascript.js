@@ -26,14 +26,14 @@ particle.getEventStream({ deviceId: deviceId, auth: token }).then(function(strea
 
 var fsmCalled = false;
 particle.getVariable({ deviceId: deviceId, name: "varState", auth: token }).then(function(data) {
-  console.log('Device variable retrieved successfully:', data);
+  // console.log('Device variable retrieved successfully:', data);
 
   stateMover(data);
   // stateMover(currentStateDoor);
   console.log(currentStateDoor);
 
 }, function(err) {
-  console.log('An error occurred while getting attrs:', err);
+  // console.log('An error occurred while getting attrs:', err);
 });
 
 var name;

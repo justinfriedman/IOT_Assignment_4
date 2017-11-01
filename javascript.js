@@ -24,13 +24,30 @@ particle.getEventStream({ deviceId: deviceId, auth: token }).then(function(strea
   stream.on('state', stateMover);
 });
 
+var fsmCalled = false;
+particle.getVariable({ deviceId: deviceId, name: "varState", auth: token }).then(function(data) {
+  console.log('Device variable retrieved successfully:', data);
+
+  stateMover(data);
+  // stateMover(currentStateDoor);
+  console.log(currentStateDoor);
+
+}, function(err) {
+  console.log('An error occurred while getting attrs:', err);
+});
+
 var name;
 var currentStateDoor;
-console.log(currentStateDoor);
 
 function stateMover(data) {
-  currentStateDoor = data.data;
-  console.log(currentStateDoor);
+  if(fsmCalled == true) {
+    currentStateDoor = data.data;
+  }
+  if(fsmCalled == false) {
+    fsmCalled = true;
+    currentStateDoor = data.body.result;
+    currentStateDoor = currentStateDoor.toString();
+  }
 
   // console.log(data.data);
 

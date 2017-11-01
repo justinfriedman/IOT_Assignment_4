@@ -79,7 +79,7 @@ function stateMover(data) {
       document.getElementById('open').style.backgroundColor  = 'rgb(247, 231, 12)' ;
     break;
     case "6":
-      console.log("Stopped");
+      console.log("Error");
       document.getElementById('card-title').innerHTML = "ERROR";
       document.getElementById('close-btn').innerHTML = "PRESS TO FIX";
       document.getElementById('open').style.backgroundColor  = 'rgb(70,130,180)';

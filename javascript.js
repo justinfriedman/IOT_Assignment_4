@@ -26,12 +26,15 @@ particle.getEventStream({ deviceId: deviceId, auth: token }).then(function(strea
   stream.on('state', stateMover);
 });
 
+document.getElementById("card").style.display == "none";
+console.log("waiting");
 
 var fsmCalled = false;
 particle.getVariable({ deviceId: deviceId, name: "varState", auth: token }).then(function(data) {
   // console.log('Device variable retrieved successfully:', data);
   stateMover(data);
-  document.getElementById("main-page").style.display = "block";
+  document.getElementById("card").style.display = "block";
+  console.log("received data");
   // stateMover(currentStateDoor);
   console.log(currentStateDoor);
 

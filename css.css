@@ -183,9 +183,10 @@ display: none;
 
 
 }
-#main-page{
-display: none;
+#card {
+  display: none;
 }
+
 #edit-page{
   display:none;
 

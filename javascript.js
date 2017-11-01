@@ -25,7 +25,8 @@ particle.getEventStream({ deviceId: deviceId, auth: token }).then(function(strea
 });
 
 var name;
-var currentDoorState;
+var currentStateDoor;
+console.log(currentStateDoor);
 
 function stateMover(data) {
   currentStateDoor = data.data;
@@ -97,7 +98,7 @@ document.getElementById("close-btn").addEventListener("click", function() {
 if(currentStateDoor==6) {
   argument="errorPress";
 } else {
-  argument = "Press";
+  argument = "press";
 }
 
         var moveState = particle.callFunction({ deviceId: deviceId, name: 'webButton', argument:argument, auth: token });

@@ -10,6 +10,8 @@ var username = 'justinfriedman22@gmail.com';
 var password = 'photonFun12';
 var deviceId = '240035001347343438323536';
 
+
+
 particle.login({username: username , password: password}).then(
   function(data) {
     token = data.body.access_token;
@@ -24,11 +26,12 @@ particle.getEventStream({ deviceId: deviceId, auth: token }).then(function(strea
   stream.on('state', stateMover);
 });
 
+
 var fsmCalled = false;
 particle.getVariable({ deviceId: deviceId, name: "varState", auth: token }).then(function(data) {
   // console.log('Device variable retrieved successfully:', data);
-
   stateMover(data);
+  document.getElementById("main-page").style.display = "block";
   // stateMover(currentStateDoor);
   console.log(currentStateDoor);
 

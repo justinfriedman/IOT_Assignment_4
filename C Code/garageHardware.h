@@ -105,12 +105,12 @@ void setLightPWM(int cyclePct);
 
 
 // void timerOver(){
-    
+
 //     switch (state) {
 //     case 0:
-//     //down 
-    
-      
+//     //down
+
+
 //       break;
 //     case 1:
 //     //going down
@@ -119,13 +119,13 @@ void setLightPWM(int cyclePct);
 //       break;
 //     case 2:
 //     //going up
-   
+
 //     Serial.println("up");
 //      state = 3;
 //       break;
 //     case 3:
 //     //up
-      
+
 //       break;
 //     case 4:
 //      //stopped going down
@@ -135,9 +135,9 @@ void setLightPWM(int cyclePct);
 //         break;
 //     case 6:
 //     //error
-        
+
 //         break;
-    
+
 //   }
 // }
 
@@ -156,23 +156,24 @@ void goDown();
 void goingUp();
 void goingDown();
 void fault();
-  
-    
+
+
    void atTop();
-    
+
   void  atBottom();
-    
-    
-     
-    
- 
-   
+
+
+
+
+
+
   void deltaTimingStart();
   void deltaTimingTrigger();
-   
-   void endFault();
-   void internetButton();
 
+   void endFault();
+   int webButton(String command);
+
+void remoteEndFault();
 
 
 

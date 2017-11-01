@@ -5,13 +5,13 @@
 
 // TODO: Define any variables or constants here
 
-int state = 0; //state of FSM 
-const int millisDelay = 100; //delta time delay 
+int state = 0; //state of FSM
+const int millisDelay = 100; //delta time delay
 int remainingTime;
 int passedTime;
 Timer timer(5000, lightOff, true); //  garage light timer we used on board LED
 boolean timerStarted = false; // for garage light auto off s
-int lastRGB [6] = {0,0,0,41, 170, 270}; // return led state after error 
+int lastRGB [6] = {0,0,0,41, 170, 270}; // return led state after error
 boolean called = true;
 boolean fullyOpen = false;
 boolean fullyClosed  = true;
@@ -23,37 +23,42 @@ const int faultPin = D5;
 const int endStopUpPin = D3;
 const int endStopDownPin = D4;
 const int controlButtonPin = D1;
-int millisButtonPress; // delta time 
- bool buttonState; // delta time 
- int errorState; // for error throwing 
+int millisButtonPress; // delta time
+ bool buttonState; // delta time
+ int errorState; // for error throwing
 /**
  * Setup the door hardware (all I/O should be configured here)
  *
  * This routine should be called only once from setup()
  */
+
 void setupHardware() {
-    
+
   // TODO: Your code to setup your "simulated" hardware
-  
+
     Serial.begin(9600); //set up serial connection
     Particle.publish("state", String(state));
-   
-    
 
-    
+
+
+
    pinMode(D7, OUTPUT);
-// Button 
+// Button
     pinMode(controlButtonPin, INPUT_PULLUP);
-    
+
       pinMode(endStopUpPin, INPUT_PULLUP);
        pinMode(endStopDownPin, INPUT_PULLUP);
-      
+
 // RGB LED
 pinMode( redPin, OUTPUT);
   pinMode( greenPin, OUTPUT);
   pinMode( bluePin, OUTPUT);
   rgbSetter(41, 170, 27);
-// Normal LED
+// cloud functions and variable defs
+Particle.function("webButton", webButton);
+Particle.variable("varState", state);
+
+
 Serial.print("Welcome"); // if i time it perfectly i see this
 }
 
@@ -68,10 +73,10 @@ Serial.print("Welcome"); // if i time it perfectly i see this
 bool isButtonPressed() {
   int upDown;
     //check if the button is currently pressed by digital read
-    if(digitalRead(controlButtonPin)==0) { 
-        return true; 
+    if(digitalRead(controlButtonPin)==0) {
+        return true;
     } else {
-        return false; 
+        return false;
     }
 }
 
@@ -87,14 +92,14 @@ bool isDoorFullyClosed() {
   // TODO: Your code to simulate the closed switch
   //       Use a button, switch, or wired (connected to 3V or GND)
  //end stop sensor simulated with a bool
- 
+
  if ( digitalRead(endStopDownPin) == 0) {
      fullyClosed = true;
      fullyOpen = false;
      return true;
  }
 
-  
+
   else {
       return fullyClosed;
   }
@@ -117,7 +122,7 @@ bool isFaultActive() {
   else {
       return false;
   }
-  
+
 }
 
 /**
@@ -131,14 +136,14 @@ bool isFaultActive() {
 bool isDoorFullyOpen() {
   // TODO: Your code to simulate the opened switch
   //       Use a button, switch, or wired (connected to 3V or GND)
-   
+
  if ( digitalRead(endStopUpPin) ==0) {
      fullyClosed = false;
      fullyOpen = true;
      return true;
  }
 
-  
+
   else {
       return fullyOpen;
   }
@@ -173,7 +178,7 @@ void startMotorClosing() {
    rgbSetter(255, 0, 255); // set LED
   state = 1; // increment state
   Particle.publish("state", String(state));
-  fullyOpen = false; // simulate change in end state sensor 
+  fullyOpen = false; // simulate change in end state sensor
 }
 
 /**
@@ -201,7 +206,7 @@ void stopMotor() {
 void setLight(boolean on) {
   // TODO: Your code to simulate the light
   //       Use an individual LED
-  
+
    if (on == true) {
     digitalWrite(D7, HIGH);
     //  Serial.println("light on");
@@ -236,12 +241,12 @@ void setLightPWM(int cyclePct) {
 // OUR METHODS
 
 // void timerOver(){
-    
+
 //     switch (state) {
 //     case 0:
-//     //down 
-    
-      
+//     //down
+
+
 //       break;
 //     case 1:
 //     //going down
@@ -250,13 +255,13 @@ void setLightPWM(int cyclePct) {
 //       break;
 //     case 2:
 //     //going up
-   
+
 //     Serial.println("up");
 //      state = 3;
 //       break;
 //     case 3:
 //     //up
-      
+
 //       break;
 //     case 4:
 //      //stopped going down
@@ -266,17 +271,17 @@ void setLightPWM(int cyclePct) {
 //         break;
 //     case 6:
 //     //error
-        
+
 //         break;
-    
+
 //   }
 // }
 
 void rgbSetter(int r, int g, int b) { // parameters are the 0-255 r,g,b values
-    //this section sets the start of the array of two rgb 
-    //color numbers to the last color used so that, in 
+    //this section sets the start of the array of two rgb
+    //color numbers to the last color used so that, in
     //the case of a service error, color can be restored
-    lastRGB[0] = lastRGB[3]; 
+    lastRGB[0] = lastRGB[3];
     lastRGB[1] = lastRGB[4];
     lastRGB[2] = lastRGB[5];
     //set 3,4,5 -> r,g,b
@@ -287,7 +292,7 @@ void rgbSetter(int r, int g, int b) { // parameters are the 0-255 r,g,b values
     analogWrite(redPin, r);
     analogWrite(greenPin, g);
     analogWrite(bluePin, b);
-    
+
     //colors
     //up
     //255, 0, 16
@@ -301,7 +306,7 @@ void rgbSetter(int r, int g, int b) { // parameters are the 0-255 r,g,b values
     //255, 0, 255
     //stopped going down
     //255, 225, 0
-    
+
 }
 
 
@@ -313,7 +318,7 @@ void goUp() {
     state = 2; // increment state
     Particle.publish("state", String(state));
     timer.stop(); // stop active timer
-    timerStarted = false; 
+    timerStarted = false;
     setLight(true); // change state of overhead light
     rgbSetter(165,24,97);
     startMotorOpening(); // call API
@@ -324,7 +329,7 @@ void goUp() {
 }
 
 void goDown() {
-    
+
     state = 1; // increment state
     // Particle.publish("state", String(state));
     startMotorClosing(); // call API
@@ -350,15 +355,15 @@ void goingUp(){
 }
 
 void goingDown(){
-    
-    state = 4; // increment state 
+
+    state = 4; // increment state
     Particle.publish("state", String(state));
     stopMotor(); // call API
     // timer.stop();
     // remainingTime = millis() - passedTime;
     // timer.changePeriod(remainingTime);
     Serial.println("stopped going down, will go up on next press");
-    rgbSetter(255, 225, 0); // change lED 
+    rgbSetter(255, 225, 0); // change lED
 }
 
 
@@ -368,15 +373,15 @@ void fSM(int param) { // param is the state passed into the state machine
     switch (param) {
     case 0: //if the state is 0 (the door was down when the fsm was called) call goUp()
     goUp();
-    
-      
+
+
       break;
     case 1: // if the state is 1(going down) when the fsm was called, call goingDown()
     //going down
       goingDown();
       break;
     case 2: // if the state is 2(going up) when the fsm was called, call goingUp()
-    goingUp(); 
+    goingUp();
       break;
     case 3: // if the state is 3(up) when the fsm was called, call goDown()
     //up
@@ -389,24 +394,37 @@ void fSM(int param) { // param is the state passed into the state machine
     case 5: // if the state is 5(stopped going up) when the fsm was called, call goDown()
     goDown();
         break;
-    case 6: // due to the manner in which we simulated the fault trigger, this state is empty
+    case 6:
+    state = errorState;
+    webButton("errorPress");
+
+
     //error
-        
+
         break;
-    
+
   }
 }
 
 void fault() {
      if (isFaultActive() && state != 6) { // if the fault is triggered and we are not in the fault state
-        errorState = state; // save the last state
+        if (state == 4 ) {
+            errorState = 1;
+        }
+        if (state == 5 ) {
+            errorState = 2;
+        }
+        if (state != 4 && state !=5 ) {
+            errorState = state; // save the last state
+        }
+
         state = 6; // state is now the error state
        Particle.publish("state", String(state));
         rgbSetter(0,0,0); // LED off
-        Serial.println("error"); 
+        Serial.println("error");
         delay(100);
-       
-        
+
+
     }
 }
 
@@ -417,12 +435,12 @@ void atTop(){
         fullyOpen = true;
         rgbSetter(255, 0, 16);
         Serial.println("up");
-        
+
        timerStarted = true;
        timer.start(); //start overhead light
         // Serial.println("light timer started");
-        
-        
+
+
     }
 }
 
@@ -433,11 +451,11 @@ void atBottom() {
         fullyClosed = true;
         rgbSetter(41, 170, 27);
         Serial.println("down");
-        
+
        timerStarted = true;
        timer.start(); // start overhead light
     //   Serial.println("light timer started");
-       
+
     }
 }
 
@@ -452,36 +470,64 @@ void deltaTimingStart(){
 void deltaTimingTrigger() {
     if((millis() - millisButtonPress) > millisDelay  ) { // delta timing trigger, if current time - button pressed time > 100ms delay
        if (called == false) { // if we have not called the trigger yet
-           fSM(state); // call to FSM 
+           fSM(state); // call to FSM
            setLight(true); // call to change light state
            called = true; // we have called trigger
        }
        if(buttonState != isButtonPressed()) { // if the button is no longer pressed, change state
-            
+
             buttonState = false;
        }
-       
+
    }
 }
 
-void internetButton() {
-    fSM(state); // call to FSM 
+int webButton( String command ) {
+    if (command == "press") {
+        fSM(state); // call to FSM
    setLight(true); // call to change light state
-   
+   return 1;
+    }
+     if (command == "errorPress") { // when pressing out of an error
+         if (state==6) { // confirm state is error
+         Serial.println("out of error");
+        rgbSetter(lastRGB[1],lastRGB[2],lastRGB[3]); // reset color
+        state = errorState; //reset state
+        Particle.publish("state", String(state));
+        fSM(state);
+        return 1;
+            }
+            Serial.println(command); // errorPress sent but not in error state
+    return -1;
+    }
+    if (command == "info") { // if we ask for info
+        Serial.println(state);
+        return 2;
+    }
+    else {
+        Serial.println(command); // nothing usable was sent in
+        return -1;
+    }
+
+
+
 }
 
+
+
+
 void endFault() {
-    if (isButtonPressed() == true && state == 6) { //come out of fault 
-   
+    if (isButtonPressed() == true && state == 6) { //come out of fault
+
         while(isButtonPressed() == true) {
-            
+
         }
         Serial.println("out of error");
         rgbSetter(lastRGB[1],lastRGB[2],lastRGB[3]); // reset color
         state = errorState; //reset state
-       
-        
-        
+
+
+
     }
-   
+
 }

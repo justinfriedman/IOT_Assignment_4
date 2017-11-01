@@ -28,6 +28,7 @@ particle.getEventStream({ deviceId: deviceId, auth: token }).then(function(strea
 });
 // ensures that you cannot press the ui until we receive the data
 document.getElementById("card").style.display == "none";
+document.getElementById("notLoaded").innerHTML = "Please connect photon";
 console.log("waiting");
 
 var fsmCalled = false;
@@ -36,6 +37,7 @@ particle.getVariable({ deviceId: deviceId, name: "varState", auth: token }).then
   // console.log('Device variable retrieved successfully:', data);
   stateMover(data);
   document.getElementById("card").style.display = "block";
+  document.getElementById("notLoaded").innerHTML = "";
   console.log("received data");
   // stateMover(currentStateDoor);
   console.log(currentStateDoor);

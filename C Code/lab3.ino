@@ -12,10 +12,10 @@ void setup() {
 }
 
 void loop() {
-   fault();
-   atTop();
-    atBottom();
-    deltaTimingStart();
-   deltaTimingTrigger();
-   endFault();
+   fault(); //check for fault
+   atTop();// check if at top
+    atBottom(); // check if at bottom
+    deltaTimingStart(); // start delta timing
+   deltaTimingTrigger(); // fire delta timing
+   endFault(); // check for fault off
 }

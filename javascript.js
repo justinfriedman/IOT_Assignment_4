@@ -92,9 +92,16 @@ function stateMover(data) {
   }
 }
 
-
+var argument;
 document.getElementById("close-btn").addEventListener("click", function() {
-        var moveState = particle.callFunction({ deviceId: deviceId, name: 'webButton', argument:'press', auth: token });
+if(currentStateDoor==6) {
+  argument="errorPress";
+
+} else {
+  argument = "Press"
+}
+
+        var moveState = particle.callFunction({ deviceId: deviceId, name: 'webButton', argument:argument, auth: token });
         moveState.then(
         function(data) {
           console.log('Function called succesfully:', data);

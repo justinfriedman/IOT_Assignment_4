@@ -174,6 +174,8 @@ void fault();
    int webButton(String command);
 
 void remoteEndFault();
+void autoCloseTrigger();
+int autoCloseWeb(String command);
 
 
 

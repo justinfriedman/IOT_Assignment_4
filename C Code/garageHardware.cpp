@@ -1,4 +1,4 @@
-#include"GarageHardware.h"
+#include"garageHardware.h"
 
 
 
@@ -26,6 +26,10 @@ const int controlButtonPin = D1;
 int millisButtonPress; // delta time
  bool buttonState; // delta time
  int errorState; // for error throwing
+bool autoCloseOn = false;
+unsigned int period = 0;
+
+  Timer autoClose(10, autoCloseTrigger, true);
 /**
  * Setup the door hardware (all I/O should be configured here)
  *
@@ -56,6 +60,7 @@ pinMode( redPin, OUTPUT);
   rgbSetter(41, 170, 27);
 // cloud functions and variable defs
 Particle.function("webButton", webButton);
+Particle.function("autoCloseWeb", autoCloseWeb);
 Particle.variable("varState", state);
 
 
@@ -504,6 +509,7 @@ int webButton( String command ) {
         Serial.println(state);
         return 2;
     }
+
     else {
         Serial.println(command); // nothing usable was sent in
         return -1;
@@ -513,7 +519,32 @@ int webButton( String command ) {
 
 }
 
+int autoCloseWeb( String command) {
+  if (command == "0") {
+    autoCloseOn = false;
+    return 1;
+  }
+  if (command.toInt() != 0) {
+    autoCloseOn = true;
+    period = abs(command.toInt());
 
+    Serial.print("new period: ");
+    Serial.println(period);
+    return 1;
+  }
+  else {
+    return 0;
+  }
+
+}
+
+void autoCloseCaller() {
+  if (autoCloseOn) {
+    autoClose.changePeriod(period);
+    autoClose.start();
+  }
+
+}
 
 
 void endFault() {
@@ -530,4 +561,12 @@ void endFault() {
 
     }
 
+}
+
+void autoCloseTrigger() {
+  if (state == 3) {
+    Serial.println("timer finished");
+
+    fSM(state);
+  }
 }

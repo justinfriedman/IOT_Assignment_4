@@ -2,7 +2,7 @@
 
 // This #include statement was automatically added by the Particle IDE.
 
-#include "GarageHardware.h"
+#include "garageHardware.h"
 
 
 

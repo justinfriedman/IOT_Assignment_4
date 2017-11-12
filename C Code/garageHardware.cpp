@@ -62,6 +62,7 @@ pinMode( redPin, OUTPUT);
 Particle.function("webButton", webButton);
 Particle.function("autoCloseWeb", autoCloseWeb);
 Particle.variable("varState", state);
+Particle.variable("autoCloseOn", autoCloseOn);
 // while (state == -1) {
 //   if (endStopUpPin == 0) {
 //     state = 3;
@@ -443,6 +444,7 @@ void fault() {
 void atTop(){
     if (state == 2 && isDoorFullyOpen()) { // if the state is going up and we hit an endstop
         state = 3; // state is up
+        autoCloseCaller();
        Particle.publish("state", String(state));
         fullyOpen = true;
         rgbSetter(255, 0, 16);
@@ -549,6 +551,7 @@ void autoCloseCaller() {
   if (autoCloseOn) {
     autoClose.changePeriod(period);
     autoClose.start();
+    Serial.println("auto close timer started");
   }
 
 }

@@ -94,3 +94,5 @@ function doneClaimingDevices() {
 function errorClaimingDevices() {
  console.log("Error Claiming Devices");
 }
+
+////........../////

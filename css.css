@@ -167,15 +167,19 @@ body {
 }
 
 #login-page {
-display: none;
+/*display: none;*/
 }
 #create-page{
   display:none;
 
 }
+
+#main-page {
+  display: none;
+}
+
 #request-page{
   display:none;
-
 
 }
 #reset-page{

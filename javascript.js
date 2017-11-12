@@ -405,11 +405,18 @@ function singleDisplay(x) {
   document.getElementById(x).style.display ='block';
 }
 
+
+// account creation code
+
+
 // login button
 document.getElementById("login-btn").addEventListener("click", function() {
 
         var email = document.getElementById('email').value;
         var password = document.getElementById('pw').value;
+
+
+
         if (email == user1.email && password == user1.password ) {
 
                 console.log("USER 1 LOGIN"); //replace with call to display function
@@ -426,23 +433,26 @@ document.getElementById("login-btn").addEventListener("click", function() {
                 });
 
         }
-        if (email == user2.email && password == user2.password) {
-
-                console.log("USER 2 LOGIN");//replace with call to display function
-                user1 = user2;
-
-                mainSetter();
-                displayElement("login-page","main-page");
-                document.getElementById('logout-li').innerHTML = '<a href="#" id="logout">Logout</a>';
-                document.getElementById("logout").addEventListener("click", function() {
-                        displayElement(currentView,"login-page");
-                        user1 = '';
-                        currentView = 'login-page';
-                        document.getElementById('logout-li').innerHTML = '';
-                });
 
 
-        }
+
+        // if (email == user2.email && password == user2.password) {
+        //
+        //         console.log("USER 2 LOGIN");//replace with call to display function
+        //         user1 = user2;
+        //
+        //         mainSetter();
+        //         displayElement("login-page","main-page");
+        //         document.getElementById('logout-li').innerHTML = '<a href="#" id="logout">Logout</a>';
+        //         document.getElementById("logout").addEventListener("click", function() {
+        //                 displayElement(currentView,"login-page");
+        //                 user1 = '';
+        //                 currentView = 'login-page';
+        //                 document.getElementById('logout-li').innerHTML = '';
+        //         });
+        //
+        //
+        // }
 
                 if (newUser == true) {
                         if (email == user3.email && password == user3.password) {

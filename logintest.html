@@ -3,16 +3,73 @@
 <head>
  <meta charset="utf-8">
  <title>Title</title>
+ <link rel="stylesheet" type="text/css" href="test.css">
+
  <script type="text/javascript" src="http://cdn.jsdelivr.net/particle-api-js/5/particle.min.js">
 </script>
 </head>
 <body>
-<p>Particle Customer Creation: Look at Console Messages for Details.</p>
-</body>
+  <div id="login-page">
+
+  <h2>Login To Your Account </h2>
+
+  <div class="form">
+    <div class="pad">
+      <label >Email Address:</label>
+      <input type="email" id="email"/>
+    </div>
+    <div class="pad">
+      <label >Password:</label>
+      <input type="password" id="pw" placeholder="test"/>
+    </div>
+    <i><button id="forgot-pwd-btn">Forgot Password?</button></i><br />
+    <i><button id="create-account-btn">Create an Account</button></i>
+  <br />
+  <br />
+    <button class="no-dec-a" id="login-btn">Login</button>
+   </div>
+  </div>
+
+  <div id="create-page">
+
+  <h2>Create an Account! </h2>
+
+  <div class="form">
+    <div class="pad">
+      <label >Email Address:</label>
+      <input type="email" id="email-registration"/>
+    </div>
+    <div class="pad">
+      <label >New Password:</label>
+      <input type="password" id="pw-registration"/>
+    </div>
+    <!-- <div class="pad">
+      <label >Confirm Password:</label>
+      <input type="password"/>
+    </div>
+    <div class="pad">
+      <label >Phone Number</label>
+      <input type="tel" class="form-control" id="phone-registration" />
+    </div>
+    <div class="pad">
+      <label>ID Number</label>
+      <input type="number" class="form-control" id="id-registration" />
+    </div> -->
+    <button class="no-dec-a" id="create-btn">Create Account</button>
+  </div>
+
+  </div>
+
+
+  </body>
 </html>
 
 <script>
 var particle = new Particle();
+
+
+
+
 
 // Define all the values that we'll be using
 
@@ -20,17 +77,17 @@ var particle = new Particle();
 //******* Part 1: In an actual application these values would be included in the app
 
 // The "Product" that this customer will be using
-var productId = "6153"
+var productId = "6153";
 
 // The OAuth ID and Token that will be used to create customers for the Product
-var clientId = "washu-garage-door-5162"
-var clientToken = "882ec3178524a02ad8bdb1473fd6aaa143f5a38c"
+var clientId = "washu-garage-door-5162";
+var clientToken = "882ec3178524a02ad8bdb1473fd6aaa143f5a38c";
 
 //*************************************************************************************
 // ****** Part 2: In an actual application these values would be retrieved from the devices
 // ****** while configuring Wi-Fi
 // The two devices that will be registered to the customer
-var deviceOneId = "2e0060000e51353338363333"
+var deviceOneId = "2e0060000e51353338363333";
 // var deviceTwoId = "2e0060000e51353338363333"
 
 
@@ -40,13 +97,82 @@ var deviceOneId = "2e0060000e51353338363333"
 // ****** (You should get them from your user when you update your work, but you can hardcode them
 // ****** here to test the process)
 // The email/password the customer wants to use
-var email = "test@gmail.com"
-var password = "test"
+// login
+
+
+
+// document.getElementById("create-btn").addEventListener("click",function() {
+//   var email = document.getElementById('email').value;
+//   var password = document.getElementById('pw').value;
+//
+//   particle.createCustomer( {productId:productId, clientId:clientId, clientToken:clientToken, customerEmail:email, customerPassword:password} )
+//    .then(saveTokenAndClaimDeviceOne)
+//    // .then(claimDeviceTwo)
+//    .then(doneClaimingDevices)
+//    .catch(errorClaimingDevices)
+//
+//    function saveTokenAndClaimDeviceOne(data) {
+//     console.log("Success creating customer; Claiming Device One");
+//     console.dir(data)
+//     customerToken = data.body.access_token;
+//     // Return a "promise" object (so .then() can be used)
+//
+//     return particle.claimDevice({deviceId:deviceOneId, requestTransfer:true, auth:customerToken})
+//    }
+//
+// });
+
+
+document.getElementById("login-btn").addEventListener("click",function() {
+  var username = document.getElementById('email').value;
+  var pass = document.getElementById('pw').value;
+
+  particle.login({username: username, password: pass}).then(
+    function(data) {
+      token = data.body.access_token;
+      console.log("success");
+    },
+    function (err) {
+      console.log('Could not log in.', err);
+    }
+  );
+
+});
+
+
+
+
+document.getElementById("create-btn").addEventListener("click",function() {
+  var email = document.getElementById('email-registration').value;
+  var password = document.getElementById('pw-registration').value;
+// TO DO IF PASSWORDS DONT MATCH THROW Error
+
+  particle.createCustomer( {productId:productId, clientId:clientId, clientToken:clientToken, customerEmail:email, customerPassword:password} )
+   .then(saveTokenAndClaimDeviceOne)
+   // .then(claimDeviceTwo)
+   .then(doneClaimingDevices)
+   .catch(errorClaimingDevices)
+
+   function saveTokenAndClaimDeviceOne(data) {
+    console.log("Success creating customer; Claiming Device One");
+    console.dir(data)
+    customerToken = data.body.access_token;
+    console.log(customerToken)
+    // Return a "promise" object (so .then() can be used)
+
+    return particle.claimDevice({deviceId:deviceOneId, requestTransfer:true, auth:customerToken})
+   }
+
+});
+
+
+// var email = "test@gmail.com"
+// var password = "test"
 
 
 //*************************************************************************************
 // The customer's token after they login. This will be returned by particle.
-var customerToken = "LEAVE ALONE"
+var customerToken = "LEAVE ALONE";
 
 // The Particle API does not come with a "create customer" function, so we'll add one to the
 // particle object (Don't use this for a true web based app --- use Particle's
@@ -71,27 +197,17 @@ particle.createCustomer = function ({ productId, clientId, clientToken, customer
 }
 
 
+
+
 // Create a customer and, if successful, register devices.
 // This "chains promises":
 //    If creating the customer works, then it will get the claim code.
 //    If getting the claim code works too, then it will claim device one
 //    If claiming device one also works, then it will claim device two
-particle.createCustomer( {productId:productId, clientId:clientId, clientToken:clientToken, customerEmail:email, customerPassword:password} )
- .then(saveTokenAndClaimDeviceOne)
- // .then(claimDeviceTwo)
- .then(doneClaimingDevices)
- .catch(errorClaimingDevices)
+
 
 //*************************************************************************************
 // Helper functions: Each prints some debugging info and makes a request
-
-function saveTokenAndClaimDeviceOne(data) {
- console.log("Success creating customer; Claiming Device One");
- console.dir(data)
- customerToken = data.body.access_token;
- // Return a "promise" object (so .then() can be used)
- return particle.claimDevice({deviceId:deviceOneId, requestTransfer:true, auth:customerToken})
-}
 
 // function claimDeviceTwo(data) {
 //  console.log("Success claiming device one; Claiming Device Two");
@@ -105,6 +221,7 @@ function doneClaimingDevices() {
 }
 
 function errorClaimingDevices() {
+ alert("Wrong password/username");
  console.log("Error Claiming Devices");
 }
 </script>

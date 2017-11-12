@@ -62,7 +62,14 @@ pinMode( redPin, OUTPUT);
 Particle.function("webButton", webButton);
 Particle.function("autoCloseWeb", autoCloseWeb);
 Particle.variable("varState", state);
-
+// while (state == -1) {
+//   if (endStopUpPin == 0) {
+//     state = 3;
+//   }
+//   if (endStopDownPin == 0) {
+//     state = 0;
+//   }
+// }
 
 Serial.print("Welcome"); // if i time it perfectly i see this
 }

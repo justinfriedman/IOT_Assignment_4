@@ -167,6 +167,28 @@ if(currentStateDoor==6) {
       });
 
 
+var secs = 2;
+// if error button is getting pressed
+document.getElementById("close-btn").addEventListener("click", function() {
+if(currentStateDoor==6) {
+  // set equal to error press to pass through the call function
+  argument="errorPress";
+} else {
+  // leave as just press
+  argument = "press";
+}
+// callFunction WebButton (in C) when we have a press (if error, use Error press then)
+        var moveState = particle.callFunction({ deviceId: deviceId, name: 'webButton', argument:argument, auth: token });
+        moveState.then(
+        function(data) {
+          console.log('Function called succesfully:', data);
+        }, function(err) {
+          console.log('An error occurred:', err);
+        });
+      });
+
+
+
 var timeValue;
 var autoTimer = false;
 // moves the javascript for settings to show the autocloser

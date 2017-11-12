@@ -10,7 +10,7 @@ var username = 'justinfriedman22@gmail.com';
 var password = 'photonFun12';
 var deviceId = '240035001347343438323536';
 
-
+var autoTime;
 // login to the device (sends our stored username/pw info^ )
 particle.login({username: username , password: password}).then(
   function(data) {
@@ -87,7 +87,7 @@ function stateMover(data) {
       document.getElementById('card-title').innerHTML = "Door is Going Down";
       document.getElementById('close-btn').innerHTML = "Stop";
       document.getElementById('open').style.backgroundColor  = 'rgb(247, 231, 12)' ;
-      clearTimeout(timer);
+      // clearTimeout(timer);
       // document.getElementById('close-btn').innerHTML = "Close";
     break;
 // going up state
@@ -106,9 +106,9 @@ function stateMover(data) {
       document.getElementById('close-btn').innerHTML = "Close";
       document.getElementById('open').style.backgroundColor  = 'rgb(247, 47, 47)' ;
       // if up, you can have the timer called
-      if (autoTimer == true) {
-             timer = setTimeout(autoClose, timeValue*1000);
-      }
+      // if (autoTimer == true) {
+      //        timer = setTimeout(autoClose, timeValue*1000);
+      // }
 
 
     break;
@@ -136,7 +136,7 @@ function stateMover(data) {
       document.getElementById('card-title').innerHTML = "ERROR";
       document.getElementById('close-btn').innerHTML = "PRESS TO FIX";
       document.getElementById('open').style.backgroundColor  = 'rgb(70,130,180)';
-      clearTimeout(timer);
+      // clearTimeout(timer);
     break;
     // default:
     //   console.log("loading");
@@ -168,18 +168,38 @@ if(currentStateDoor==6) {
 
 
 var secs = 2;
-// if error button is getting pressed
-document.getElementById("close-btn").addEventListener("click", function() {
-if(currentStateDoor==6) {
-  // set equal to error press to pass through the call function
-  argument="errorPress";
-} else {
-  // leave as just press
-  argument = "press";
-}
-// callFunction WebButton (in C) when we have a press (if error, use Error press then)
-        var moveState = particle.callFunction({ deviceId: deviceId, name: 'webButton', argument:argument, auth: token });
-        moveState.then(
+
+document.getElementById("enable_auto").addEventListener("click", function() {
+secs = document.getElementById("example-number-input").value;
+secs = secs.toString();
+
+        var autoTimer = particle.callFunction({ deviceId: deviceId, name: 'autoCloseWeb', argument:secs, auth: token });
+        autoTimer.then(
+        function(data) {
+          console.log('Function called succesfully:', data);
+        }, function(err) {
+          console.log('An error occurred:', err);
+        });
+      });
+
+document.getElementById("save_setting").addEventListener("click", function() {
+secs = document.getElementById("example-number-input").value;
+secs = secs.toString();
+
+        var autoTimer = particle.callFunction({ deviceId: deviceId, name: 'autoCloseWeb', argument:secs, auth: token });
+        autoTimer.then(
+        function(data) {
+          console.log('Function called succesfully:', data);
+        }, function(err) {
+          console.log('An error occurred:', err);
+        });
+      });
+document.getElementById("turn_off").addEventListener("click", function() {
+secs = 0;
+secs = secs.toString();
+
+        var autoTimer = particle.callFunction({ deviceId: deviceId, name: 'autoCloseWeb', argument:secs, auth: token });
+        autoTimer.then(
         function(data) {
           console.log('Function called succesfully:', data);
         }, function(err) {
@@ -190,30 +210,45 @@ if(currentStateDoor==6) {
 
 
 var timeValue;
-var autoTimer = false;
-// moves the javascript for settings to show the autocloser
-document.getElementById("enable_auto").addEventListener("click", function() {
-      //  displayElement(enable_auto,settings_module);
-      document.getElementById("settings_module").style.display ="block";
-      document.getElementById("enable_auto").style.display ="none";
+particle.getVariable({ deviceId: deviceId, name: "autoCloseOn", auth: token }).then(function(data) {
+  // console.log('Device variable retrieved successfully:', data);
+  autoTime = data.body.result;
+  if (!autoTime) {
+    document.getElementById("enable_auto").addEventListener("click", function() {
+          //  displayElement(enable_auto,settings_module);
+          document.getElementById("autoState").innerHTML = "Auto-Close is Off";
+          document.getElementById("settings_module").style.display ="block";
+          document.getElementById("enable_auto").style.display ="none";
+    });
+
+  }
+  if (autoTime)  {
+    document.getElementById("settings_module").style.display ="block";
+    document.getElementById("enable_auto").style.display ="none";
+    document.getElementById("autoState").innerHTML = "Auto-Close is On";
+  }
+  console.log(autoTime);
+}, function(err) {
+  // console.log('An error occurred while getting attrs:', err);
 });
+// moves the javascript for settings to show the autocloser
+
 // turns off the auto closer
 document.getElementById("turn_off").addEventListener("click", function() {
       //  displayElement(enable_auto,settings_module);
-      // sets state of the autoTimer
-      autoTimer = false;
+
       // html updates
       document.getElementById("settings_module").style.display ="none";
       document.getElementById("enable_auto").style.display ="block";
       document.getElementById("autoState").innerHTML ="AutoClose is Off";
-      document.getElementById("offButton").style.display ="none";
+      document.getElementById("offButton").style.display ="block";
+    
 
 });
 // saves / updates the autocloser
 document.getElementById("save_setting").addEventListener("click", function() {
       //  displayElement(enable_auto,settings_module);
-      // sets state of the AutoTimer
-      autoTimer = true;
+
       //pulls the value
       timeValue = document.getElementById("example-number-input").value ;
       // html updates
@@ -224,24 +259,19 @@ document.getElementById("save_setting").addEventListener("click", function() {
 
 });
 
-function startAutoTimer(timeValue) {
-  while(autoTimer == true) {
-// timer for time value
-// then send close
-  }
-}
+
 // runs the autoClose function
-function autoClose() {
-        argument = "press";
-        // calls the web button function on pres
-        var moveState = particle.callFunction({ deviceId: deviceId, name: 'webButton', argument:argument, auth: token });
-        moveState.then(
-        function(data) {
-          console.log('Function called succesfully:', data);
-        }, function(err) {
-          console.log('An error occurred:', err);
-        });
-}
+// function autoClose() {
+//         argument = "press";
+//         // calls the web button function on pres
+//         var moveState = particle.callFunction({ deviceId: deviceId, name: 'webButton', argument:argument, auth: token });
+//         moveState.then(
+//         function(data) {
+//           console.log('Function called succesfully:', data);
+//         }, function(err) {
+//           console.log('An error occurred:', err);
+//         });
+// }
 
 
 

@@ -176,7 +176,7 @@ void fault();
 void remoteEndFault();
 void autoCloseTrigger();
 int autoCloseWeb(String command);
-
+void autoCloseCaller();
 
 
 #endif

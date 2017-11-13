@@ -5,7 +5,8 @@
 
 // TODO: Define any variables or constants here
 
-int state = 0; //state of FSM
+int state = 7; //state of FSM
+boolean setupBool = false;
 const int millisDelay = 100; //delta time delay
 int remainingTime;
 int passedTime;
@@ -24,9 +25,9 @@ const int endStopUpPin = D3;
 const int endStopDownPin = D4;
 const int controlButtonPin = D1;
 int millisButtonPress; // delta time
- bool buttonState; // delta time
+ boolean buttonState; // delta time
  int errorState; // for error throwing
-bool autoCloseOn = false;
+boolean autoCloseOn = false;
 unsigned int period = 0;
 
   Timer autoClose(10, autoCloseTrigger, true);
@@ -57,7 +58,8 @@ void setupHardware() {
 pinMode( redPin, OUTPUT);
   pinMode( greenPin, OUTPUT);
   pinMode( bluePin, OUTPUT);
-  rgbSetter(41, 170, 27);
+  rgbSetter(255, 255, 255);
+
 // cloud functions and variable defs
 Particle.function("webButton", webButton);
 Particle.function("autoCloseWeb", autoCloseWeb);
@@ -415,6 +417,8 @@ void fSM(int param) { // param is the state passed into the state machine
     //error
 
         break;
+    case 7:
+    break;
 
   }
 }
@@ -578,5 +582,37 @@ void autoCloseTrigger() {
     Serial.println("timer finished");
 
     fSM(state);
+}
+}
+void firstState() {
+  if (setupBool == false) {
+
+    if (digitalRead(endStopUpPin) == 0) {
+      state = 3;
+      autoCloseCaller();
+     Particle.publish("state", String(state));
+      fullyOpen = true;
+      rgbSetter(255, 0, 16);
+      Serial.println("initial state set to up");
+
+     timerStarted = true;
+     timer.start(); //start overhead light
+      // Serial.println("light timer started");
+      setupBool = true;
+      Particle.publish("state", String(state));
+    }
+    if (digitalRead(endStopDownPin) == 0) {
+      state = 0;
+      Particle.publish("state", String(state));
+      fullyClosed = true;
+      rgbSetter(41, 170, 27);
+      Serial.println("initial state set to down");
+
+     timerStarted = true;
+     timer.start(); // start overhead light
+  //   Serial.println("light timer started");
+      setupBool = true;
+      Particle.publish("state", String(state));
+    }
   }
 }

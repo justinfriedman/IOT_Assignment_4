@@ -143,6 +143,14 @@ function stateMover(data) {
     //   document.getElementById('card-title').innerHTML = "Door is Loading";
     //   document.getElementById('close-btn').display = "Loading";
     //   document.getElementById('open').style.backgroundColor  = white ;
+
+    case "7":
+    console.log("choose state");
+    //html/css updates
+    document.getElementById('card-title').innerHTML = "Waiting for End Stop Hit";
+    document.getElementById('close-btn').innerHTML = "hit end stop";
+    document.getElementById('open').style.backgroundColor  = 'rgb(70,130,180)';
+    break;
   }
 }
 
@@ -242,7 +250,7 @@ document.getElementById("turn_off").addEventListener("click", function() {
       document.getElementById("enable_auto").style.display ="block";
       document.getElementById("autoState").innerHTML ="AutoClose is Off";
       document.getElementById("offButton").style.display ="block";
-    
+
 
 });
 // saves / updates the autocloser

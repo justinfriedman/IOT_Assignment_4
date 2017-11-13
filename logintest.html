@@ -128,9 +128,9 @@ document.getElementById("login-btn").addEventListener("click",function() {
       token = data.body.access_token;
       console.log(token);
       console.log("success");
-      particle.getEventStream({ deviceId: deviceOneId, name: 'event', auth: token }).then(function(stream) {
-        stream.on('event', stateMover)
-      });
+      particle.getEventStream({ deviceId: deviceOneId, auth: token }).then(function(stream) {
+      stream.on('event', stateMover)
+    });
     },
     function (err) {
       console.log('Could not log in.', err);
@@ -141,6 +141,7 @@ document.getElementById("login-btn").addEventListener("click",function() {
 
 function stateMover(data) {
   console.log(data);
+  // console.log(data);
 }
 
 

@@ -29,7 +29,17 @@ int millisButtonPress; // delta time
  int errorState; // for error throwing
 boolean autoCloseOn = false;
 unsigned int period = 0;
+void remote(String event, String data) {
+    if (state == 6) {
+      webButton("errorPress");
+    }
+    else {
+        webButton("press");
+    }
 
+
+
+}
   Timer autoClose(10, autoCloseTrigger, true);
 /**
  * Setup the door hardware (all I/O should be configured here)
@@ -65,6 +75,7 @@ Particle.function("webButton", webButton);
 Particle.function("autoCloseWeb", autoCloseWeb);
 Particle.variable("varState", state);
 Particle.variable("autoCloseOn", autoCloseOn);
+Particle.subscribe("garagedoor/button", remote, MY_DEVICES);
 // while (state == -1) {
 //   if (endStopUpPin == 0) {
 //     state = 3;

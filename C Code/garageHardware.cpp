@@ -52,7 +52,7 @@ void setupHardware() {
   // TODO: Your code to setup your "simulated" hardware
 
     Serial.begin(9600); //set up serial connection
-    Particle.publish("state", String(state));
+    Particle.publish("state", String(state), 60, PRIVATE);
 
 
 
@@ -203,7 +203,7 @@ void startMotorClosing() {
   //       Use an individual LED
    rgbSetter(255, 0, 255); // set LED
   state = 1; // increment state
-  Particle.publish("state", String(state));
+  Particle.publish("state", String(state), 60, PRIVATE);
   fullyOpen = false; // simulate change in end state sensor
 }
 
@@ -342,7 +342,7 @@ void lightOff() {
 
 void goUp() {
     state = 2; // increment state
-    Particle.publish("state", String(state));
+    Particle.publish("state", String(state), 60, PRIVATE);
     timer.stop(); // stop active timer
     timerStarted = false;
     setLight(true); // change state of overhead light
@@ -371,7 +371,7 @@ void goDown() {
 
 void goingUp(){
     state = 5; // increment state
-   Particle.publish("state", String(state));
+   Particle.publish("state", String(state), 60, PRIVATE);
     stopMotor(); // call API
     // timer.stop();
     // remainingTime = millis() - passedTime;
@@ -383,7 +383,7 @@ void goingUp(){
 void goingDown(){
 
     state = 4; // increment state
-    Particle.publish("state", String(state));
+    Particle.publish("state", String(state), 60, PRIVATE);
     stopMotor(); // call API
     // timer.stop();
     // remainingTime = millis() - passedTime;
@@ -447,7 +447,7 @@ void fault() {
         }
 
         state = 6; // state is now the error state
-       Particle.publish("state", String(state));
+       Particle.publish("state", String(state), 60, PRIVATE);
         rgbSetter(0,0,0); // LED off
         Serial.println("error");
         delay(100);
@@ -460,7 +460,7 @@ void atTop(){
     if (state == 2 && isDoorFullyOpen()) { // if the state is going up and we hit an endstop
         state = 3; // state is up
         autoCloseCaller();
-       Particle.publish("state", String(state));
+       Particle.publish("state", String(state), 60, PRIVATE);
         fullyOpen = true;
         rgbSetter(255, 0, 16);
         Serial.println("up");
@@ -476,7 +476,7 @@ void atTop(){
 void atBottom() {
     if (state == 1 && isDoorFullyClosed()) { // if the state is going down and we hit an endstop
         state = 0;
-        Particle.publish("state", String(state));
+        Particle.publish("state", String(state), 60, PRIVATE);
         fullyClosed = true;
         rgbSetter(41, 170, 27);
         Serial.println("down");
@@ -522,7 +522,7 @@ int webButton( String command ) {
          Serial.println("out of error");
         rgbSetter(lastRGB[1],lastRGB[2],lastRGB[3]); // reset color
         state = errorState; //reset state
-        Particle.publish("state", String(state));
+        Particle.publish("state", String(state), 60, PRIVATE);
         fSM(state);
         return 1;
             }
@@ -601,7 +601,7 @@ void firstState() {
     if (digitalRead(endStopUpPin) == 0) {
       state = 3;
       autoCloseCaller();
-     Particle.publish("state", String(state));
+     Particle.publish("state", String(state), 60, PRIVATE);
       fullyOpen = true;
       rgbSetter(255, 0, 16);
       Serial.println("initial state set to up");
@@ -610,11 +610,11 @@ void firstState() {
      timer.start(); //start overhead light
       // Serial.println("light timer started");
       setupBool = true;
-      Particle.publish("state", String(state));
+      Particle.publish("state", String(state), 60, PRIVATE);
     }
     if (digitalRead(endStopDownPin) == 0) {
       state = 0;
-      Particle.publish("state", String(state));
+      Particle.publish("state", String(state), 60, PRIVATE);
       fullyClosed = true;
       rgbSetter(41, 170, 27);
       Serial.println("initial state set to down");
@@ -623,7 +623,7 @@ void firstState() {
      timer.start(); // start overhead light
   //   Serial.println("light timer started");
       setupBool = true;
-      Particle.publish("state", String(state));
+      Particle.publish("state", String(state), 60, PRIVATE);
     }
   }
 }

@@ -4,47 +4,35 @@ var currentView; //current display
 var newUser = false; //has a new user been created?
 var timer;
 // assignment 4
-var particle = new Particle();
+// var particle = new Particle();
 var token = "cba25a0bf2c155b90232ef035aff69dda6a66c59"; // from result of particle.login
-var username = 'justinfriedman22@gmail.com';
-var password = 'photonFun12';
+// var username = 'justinfriedman22@gmail.com';
+// var password = 'photonFun12';
 var deviceId = '240035001347343438323536';
 
 var autoTime;
-// login to the device (sends our stored username/pw info^ )
-particle.login({username: username , password: password}).then(
-  function(data) {
-    token = data.body.access_token;
-    // hey we logged in!
-    console.log('we logged in');
-  },
-  function (err) {
-    console.log('Could not log in.', err);
-  }
-);
+// // login to the device (sends our stored username/pw info^ )
+// particle.login({username: username , password: password}).then(
+//   function(data) {
+//     token = data.body.access_token;
+//     // hey we logged in!
+//     console.log('we logged in');
+//   },
+//   function (err) {
+//     console.log('Could not log in.', err);
+//   }
+// );
 // finds incoming stream "state" and calls function stateMover
-particle.getEventStream({ deviceId: deviceId, auth: token }).then(function(stream) {
-  stream.on('state', stateMover);
-});
+// particle.getEventStream({ deviceId: deviceId, auth: token }).then(function(stream) {
+//   stream.on('state', stateMover);
+// });
 // ensures that you cannot press the ui until we receive the data
 document.getElementById("card").style.display == "none";
 document.getElementById("notLoaded").innerHTML = "Please connect photon";
 console.log("waiting");
 
 var fsmCalled = false;
-// get the currentStateDoor from varState as soon as it gets connected
-particle.getVariable({ deviceId: deviceId, name: "varState", auth: token }).then(function(data) {
-  // console.log('Device variable retrieved successfully:', data);
-  stateMover(data);
-  document.getElementById("card").style.display = "block";
-  document.getElementById("notLoaded").innerHTML = "";
-  console.log("received data");
-  // stateMover(currentStateDoor);
-  console.log(currentStateDoor);
-// if an error occurs
-}, function(err) {
-  // console.log('An error occurred while getting attrs:', err);
-});
+
 
 
 //assignment 5
@@ -53,38 +41,83 @@ var particle = new Particle();
 var productId = "6153";
 var clientId = "washu-garage-door-5162";
 var clientToken = "882ec3178524a02ad8bdb1473fd6aaa143f5a38c";
+// jbf2  exterior
+var deviceOneId = "240035001347343438323536";
+// jbf photon
+var deviceTwoId = "5b004b000f51353338363333";
 
-var deviceOneId = "2e0060000e51353338363333";
-// var deviceTwoId = "2e0060000e51353338363333"
-
+// username: justinfriedman22@gmail.com
+// password: password
 
 document.getElementById("login-btn").addEventListener("click",function() {
   var username = document.getElementById('email').value;
   var pass = document.getElementById('pw').value;
-
+  console.log("clicked");
   particle.login({username: username, password: pass}).then(logSuccess, logFail)
 });
 
 function logSuccess(data) {
+  console.log("Test");
   token = data.body.access_token;
+  console.log(token);
+  // get the currentStateDoor from varState as soon as it gets connected
+  particle.getVariable({ deviceId: deviceId, name: "varState", auth: token }).then(function(data) {
+    // console.log('Device variable retrieved successfully:', data);
+    stateMover(data);
+    document.getElementById("card").style.display = "block";
+    document.getElementById("notLoaded").innerHTML = "";
+    console.log("received data");
+    // stateMover(currentStateDoor);
+    console.log(currentStateDoor);
+  // if an error occurs
+  }, function(err) {
+    // console.log('An error occurred while getting attrs:', err);
+  });
+
+  displayElement("login-page","main-page");
+
+  particle.getVariable({ deviceId: deviceId, name: "autoCloseOn", auth: token }).then(function(data) {
+    // console.log('Device variable retrieved successfully:', data);
+    autoTime = data.body.result;
+    if (!autoTime) {
+      document.getElementById("enable_auto").addEventListener("click", function() {
+            //  displayElement(enable_auto,settings_module);
+            document.getElementById("autoState").innerHTML = "Auto-Close is Off";
+            document.getElementById("settings_module").style.display ="block";
+            document.getElementById("enable_auto").style.display ="none";
+      });
+
+    }
+    if (autoTime)  {
+      document.getElementById("settings_module").style.display ="block";
+      document.getElementById("enable_auto").style.display ="none";
+      document.getElementById("autoState").innerHTML = "Auto-Close is On";
+    }
+    console.log(autoTime);
+  }, function(err) {
+    // console.log('An error occurred while getting attrs:', err);
+  });
+
   particle.getEventStream({ deviceId: deviceOneId, auth: token }).then(function(stream) {
-  stream.on('event', stateMover)
+  stream.on('state', stateMover)
   });
 
 }
+
+
 function logFail(data){
-  console.log('Could not log in.', err);
+  console.log("fail");
 }
 
 // new registartion
 
-document.getElementById("create-btn").addEventListener("click",function() {
+document.getElementById("complete-creation-btn").addEventListener("click",function() {
   var email = document.getElementById('email-registration').value;
   var password = document.getElementById('pw-registration').value;
 
   particle.createCustomer( {productId:productId, clientId:clientId, clientToken:clientToken, customerEmail:email, customerPassword:password} )
    .then(saveTokenAndClaimDeviceOne)
-   // .then(claimDeviceTwo)
+   .then(claimDeviceTwo)
    .then(doneClaimingDevices)
    .catch(errorClaimingDevices)
 
@@ -108,12 +141,12 @@ particle.createCustomer = function ({ productId, clientId, clientToken, customer
  }, auth, this.context);
 }
 
-// function claimDeviceTwo(data) {
-//  console.log("Success claiming device one; Claiming Device Two");
-//  console.dir(data)
-//  // Return a "promise" object (so .then() can be used)
-//  return particle.claimDevice({deviceId:deviceTwoId, requestTransfer:true, auth:customerToken})
-// }
+function claimDeviceTwo(data) {
+ console.log("Success claiming device one; Claiming Device Two");
+ console.dir(data)
+ // Return a "promise" object (so .then() can be used)
+ return particle.claimDevice({deviceId:deviceTwoId, requestTransfer:true, auth:customerToken})
+}
 
 function doneClaimingDevices() {
  console.log("Done Claiming Devices");
@@ -260,7 +293,7 @@ var secs = 2;
 
 document.getElementById("enable_auto").addEventListener("click", function() {
 secs = document.getElementById("example-number-input").value;
-secs = secs.toString();
+secs = secs.toString()+"000";
 
         var autoTimer = particle.callFunction({ deviceId: deviceId, name: 'autoCloseWeb', argument:secs, auth: token });
         autoTimer.then(
@@ -273,7 +306,7 @@ secs = secs.toString();
 
 document.getElementById("save_setting").addEventListener("click", function() {
 secs = document.getElementById("example-number-input").value;
-secs = secs.toString();
+secs = secs.toString()+"000";
 
         var autoTimer = particle.callFunction({ deviceId: deviceId, name: 'autoCloseWeb', argument:secs, auth: token });
         autoTimer.then(
@@ -285,7 +318,7 @@ secs = secs.toString();
       });
 document.getElementById("turn_off").addEventListener("click", function() {
 secs = 0;
-secs = secs.toString();
+secs = secs.toString()+"000";
 
         var autoTimer = particle.callFunction({ deviceId: deviceId, name: 'autoCloseWeb', argument:secs, auth: token });
         autoTimer.then(
@@ -299,27 +332,7 @@ secs = secs.toString();
 
 
 var timeValue;
-particle.getVariable({ deviceId: deviceId, name: "autoCloseOn", auth: token }).then(function(data) {
-  // console.log('Device variable retrieved successfully:', data);
-  autoTime = data.body.result;
-  if (!autoTime) {
-    document.getElementById("enable_auto").addEventListener("click", function() {
-          //  displayElement(enable_auto,settings_module);
-          document.getElementById("autoState").innerHTML = "Auto-Close is Off";
-          document.getElementById("settings_module").style.display ="block";
-          document.getElementById("enable_auto").style.display ="none";
-    });
 
-  }
-  if (autoTime)  {
-    document.getElementById("settings_module").style.display ="block";
-    document.getElementById("enable_auto").style.display ="none";
-    document.getElementById("autoState").innerHTML = "Auto-Close is On";
-  }
-  console.log(autoTime);
-}, function(err) {
-  // console.log('An error occurred while getting attrs:', err);
-});
 // moves the javascript for settings to show the autocloser
 
 // turns off the auto closer
@@ -529,76 +542,76 @@ function singleDisplay(x) {
 
 
 // login button
-document.getElementById("login-btn").addEventListener("click", function() {
-
-        var email = document.getElementById('email').value;
-        var password = document.getElementById('pw').value;
-
-
-        if (email == user1.email && password == user1.password ) {
-
-                console.log("USER 1 LOGIN"); //replace with call to display function
-                user1 = user1;
-                mainSetter();
-                displayElement("login-page","main-page");
-                document.getElementById('logout-li').innerHTML = '<a href="#" id="logout">Logout</a>';
-                document.getElementById("logout").addEventListener("click", function() {
-                    displayElement(currentView,"login-page");
-                    user1 = '';
-                    currentView = 'login-page';
-                    document.getElementById('logout-li').innerHTML = '';
-
-                });
-
-        }
-
-
-
-        // if (email == user2.email && password == user2.password) {
-        //
-        //         console.log("USER 2 LOGIN");//replace with call to display function
-        //         user1 = user2;
-        //
-        //         mainSetter();
-        //         displayElement("login-page","main-page");
-        //         document.getElementById('logout-li').innerHTML = '<a href="#" id="logout">Logout</a>';
-        //         document.getElementById("logout").addEventListener("click", function() {
-        //                 displayElement(currentView,"login-page");
-        //                 user1 = '';
-        //                 currentView = 'login-page';
-        //                 document.getElementById('logout-li').innerHTML = '';
-        //         });
-        //
-        //
-        // }
-
-                if (newUser == true) {
-                        if (email == user3.email && password == user3.password) {
-
-                                console.log("USER 3 LOGIN");//replace with call to display function
-                                user1 = user3;
-                                mainSetter();
-                                displayElement("login-page","main-page");
-                                document.getElementById('logout-li').innerHTML = '<a href="#" id="logout">Logout</a>';
-                                document.getElementById("logout").addEventListener("click", function() {
-                                        displayElement(currentView,"login-page");
-                                        user1 = '';
-                                        currentView = 'login-page';
-                                        document.getElementById('logout-li').innerHTML = '';
-                                });
-                        }
-                        if(email != user1.email && email != user2.email && email != user3.email) {
-                                alert("Wrong Login Details. Try Again.");
-                                console.log("WRONG LOGIN INFO");//replace with print to page of inncorrect password or email
-                        }
-
-                }
-        if(newUser == false && email != user1.email && email != user2.email) {
-                alert("Wrong Login Details. Try Again.");
-                console.log("WRONG LOGIN INFO");//replace with print to page of inncorrect password or email
-        }
-
-});
+// document.getElementById("login-btn").addEventListener("click", function() {
+//
+//         var email = document.getElementById('email').value;
+//         var password = document.getElementById('pw').value;
+//
+//
+//         if (email == user1.email && password == user1.password ) {
+//
+//                 console.log("USER 1 LOGIN"); //replace with call to display function
+//                 user1 = user1;
+//                 mainSetter();
+//                 displayElement("login-page","main-page");
+//                 document.getElementById('logout-li').innerHTML = '<a href="#" id="logout">Logout</a>';
+//                 document.getElementById("logout").addEventListener("click", function() {
+//                     displayElement(currentView,"login-page");
+//                     user1 = '';
+//                     currentView = 'login-page';
+//                     document.getElementById('logout-li').innerHTML = '';
+//
+//                 });
+//
+//         }
+//
+//
+//
+//         // if (email == user2.email && password == user2.password) {
+//         //
+//         //         console.log("USER 2 LOGIN");//replace with call to display function
+//         //         user1 = user2;
+//         //
+//         //         mainSetter();
+//         //         displayElement("login-page","main-page");
+//         //         document.getElementById('logout-li').innerHTML = '<a href="#" id="logout">Logout</a>';
+//         //         document.getElementById("logout").addEventListener("click", function() {
+//         //                 displayElement(currentView,"login-page");
+//         //                 user1 = '';
+//         //                 currentView = 'login-page';
+//         //                 document.getElementById('logout-li').innerHTML = '';
+//         //         });
+//         //
+//         //
+//         // }
+//
+//                 if (newUser == true) {
+//                         if (email == user3.email && password == user3.password) {
+//
+//                                 console.log("USER 3 LOGIN");//replace with call to display function
+//                                 user1 = user3;
+//                                 mainSetter();
+//                                 displayElement("login-page","main-page");
+//                                 document.getElementById('logout-li').innerHTML = '<a href="#" id="logout">Logout</a>';
+//                                 document.getElementById("logout").addEventListener("click", function() {
+//                                         displayElement(currentView,"login-page");
+//                                         user1 = '';
+//                                         currentView = 'login-page';
+//                                         document.getElementById('logout-li').innerHTML = '';
+//                                 });
+//                         }
+//                         if(email != user1.email && email != user2.email && email != user3.email) {
+//                                 alert("Wrong Login Details. Try Again.");
+//                                 console.log("WRONG LOGIN INFO");//replace with print to page of inncorrect password or email
+//                         }
+//
+//                 }
+//         if(newUser == false && email != user1.email && email != user2.email) {
+//                 alert("Wrong Login Details. Try Again.");
+//                 console.log("WRONG LOGIN INFO");//replace with print to page of inncorrect password or email
+//         }
+//
+// });
 
 // // forgot-password-button
 // document.getElementById("forgot-pwd-btn").addEventListener("click", function() {
@@ -615,59 +628,59 @@ document.getElementById("back-btn").addEventListener("click", function() {
 document.getElementById("create-account-btn").addEventListener("click", function() {
     displayElement("login-page","create-page");
 });
-document.getElementById("complete-creation-btn").addEventListener("click", function() {
+// document.getElementById("complete-creation-btn").addEventListener("click", function() {
+//
+//
+//     if(document.getElementById("email-registration").value != "" &&
+//     document.getElementById("email-registration").value != "" &&
+//     document.getElementById("pw-registration").value != "" &&
+//     document.getElementById("phone-registration").value != "" &&
+//     document.getElementById("id-registration").value != "") {
+//
+//
+//       user3 = {
+//              door: {
+//                      state:3,  // 0 for down, 1 for coming down, 2 for going up, 3 for up
+//                      temp: "72f",
+//                      hum: "34%",
+//                      motion: true, // boolean
+//
+//              },
+//              email:"",
+//              password:"",
+//              phone:"",
+//              id:"",
+//              settings: {
+//                      name: "Home",
+//                      temp: true,
+//                      hum: true,
+//                      motion: true,
+//                      autoClose: 14,
+//                      autoOpen: 200,
+//                      mobile: {
+//                              open: true,
+//                              close: true,
+//                              openFor: 11,
+//                      }
+//
+//              }
+//       };
+//
+//       user3.email = document.getElementById("email-registration").value;
+//       user3.password = document.getElementById("pw-registration").value;
+//       user3.phone = document.getElementById("phone-registration").value;
+//       user3.id = document.getElementById("id-registration").value;
+//       newUser=true;
+//       users.push["user3"];
+//       displayElement("create-page","login-page");
+//
+//     } else {
+//       alert("Please fill out the entire form.")
+//     }
+//
+//
 
-
-    if(document.getElementById("email-registration").value != "" &&
-    document.getElementById("email-registration").value != "" &&
-    document.getElementById("pw-registration").value != "" &&
-    document.getElementById("phone-registration").value != "" &&
-    document.getElementById("id-registration").value != "") {
-
-
-      user3 = {
-             door: {
-                     state:3,  // 0 for down, 1 for coming down, 2 for going up, 3 for up
-                     temp: "72f",
-                     hum: "34%",
-                     motion: true, // boolean
-
-             },
-             email:"",
-             password:"",
-             phone:"",
-             id:"",
-             settings: {
-                     name: "Home",
-                     temp: true,
-                     hum: true,
-                     motion: true,
-                     autoClose: 14,
-                     autoOpen: 200,
-                     mobile: {
-                             open: true,
-                             close: true,
-                             openFor: 11,
-                     }
-
-             }
-      };
-
-      user3.email = document.getElementById("email-registration").value;
-      user3.password = document.getElementById("pw-registration").value;
-      user3.phone = document.getElementById("phone-registration").value;
-      user3.id = document.getElementById("id-registration").value;
-      newUser=true;
-      users.push["user3"];
-      displayElement("create-page","login-page");
-
-    } else {
-      alert("Please fill out the entire form.")
-    }
-
-
-
-});
+// });
 document.getElementById("request-pwd-btn").addEventListener("click", function() {
     passWrite();
 });

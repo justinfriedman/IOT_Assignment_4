@@ -167,7 +167,7 @@ body {
 }
 
 #login-page {
-display: none;
+/*display: none;*/
 }
 #create-page{
   display:none;
@@ -175,7 +175,7 @@ display: none;
 }
 
 #main-page {
-  /*display: none;*/
+  display: none;
 }
 
 #request-page{

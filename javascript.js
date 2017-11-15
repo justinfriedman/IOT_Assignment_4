@@ -520,14 +520,18 @@ document.getElementById("login-btn").addEventListener("click", function() {
 
 });
 
-// forgot-password-button
-document.getElementById("forgot-pwd-btn").addEventListener("click", function() {
-    displayElement("login-page","request-page");
+// // forgot-password-button
+// document.getElementById("forgot-pwd-btn").addEventListener("click", function() {
+//     displayElement("login-page","request-page");
+// });
+// back page
+document.getElementById("back-btn").addEventListener("click", function() {
+    displayElement("create-page","login-page");
 });
 // forgot-password-button
-document.getElementById("forgot-pwd-btn").addEventListener("click", function() {
-    displayElement("login-page","request-page");
-});
+// document.getElementById("forgot-pwd-btn").addEventListener("click", function() {
+//     displayElement("login-page","request-page");
+// });
 document.getElementById("create-account-btn").addEventListener("click", function() {
     displayElement("login-page","create-page");
 });

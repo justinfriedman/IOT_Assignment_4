@@ -62,7 +62,8 @@ document.getElementById("login-btn").addEventListener("click",function() {
   var username = document.getElementById('email').value;
   var pass = document.getElementById('pw').value;
 
-  particle.login({username: username, password: pass}).then(logSuccess, logFail);
+  particle.login({username: username, password: pass}).then(logSuccess, logFail)
+});
 
 function logSuccess(data) {
   token = data.body.access_token;

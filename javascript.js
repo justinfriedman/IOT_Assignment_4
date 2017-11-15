@@ -126,12 +126,6 @@ function errorClaimingDevices() {
 
 
 
-
-
-
-
-
-
 var name;
 var currentStateDoor;
 // statemover function that is called when eventStream is received

@@ -106,10 +106,13 @@ function logSuccess(data) {
 
 
 function logFail(data){
+  alert("Wrong Username/Password, Please Try Again");
   console.log("fail");
 }
 
 // new registartion
+
+// particle.login({username: email, password: password}).then(logSuccess, logFail);
 
 document.getElementById("complete-creation-btn").addEventListener("click",function() {
   var email = document.getElementById('email-registration').value;
@@ -131,7 +134,7 @@ document.getElementById("complete-creation-btn").addEventListener("click",functi
     return particle.claimDevice({deviceId:deviceOneId, requestTransfer:true, auth:customerToken})
    }
 
-   // particle.login({username: email, password: password}).then(logSuccess, logFail)
+   //
 
 });
 var customerToken = "LEAVE ALONE";
@@ -155,7 +158,7 @@ function doneClaimingDevices() {
 }
 
 function errorClaimingDevices() {
- alert("Wrong password/username");
+ alert("Wrong credentials. Please try again or have device unclaimed. ");
  console.log("Error Claiming Devices");
 }
 

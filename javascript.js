@@ -5,7 +5,7 @@ var newUser = false; //has a new user been created?
 var timer;
 // assignment 4
 // var particle = new Particle();
-var token = "cba25a0bf2c155b90232ef035aff69dda6a66c59"; // from result of particle.login
+// var token = "cba25a0bf2c155b90232ef035aff69dda6a66c59"; // from result of particle.login
 // var username = 'justinfriedman22@gmail.com';
 // var password = 'photonFun12';
 var deviceId = '240035001347343438323536';
@@ -55,11 +55,13 @@ document.getElementById("login-btn").addEventListener("click",function() {
   console.log("clicked");
   particle.login({username: username, password: pass}).then(logSuccess, logFail)
 });
+var token;
+console.log("3 "+token)
 
 function logSuccess(data) {
   console.log("Test");
   token = data.body.access_token;
-  console.log(token);
+  console.log("4 "+ token);
   // get the currentStateDoor from varState as soon as it gets connected
   particle.getVariable({ deviceId: deviceId, name: "varState", auth: token }).then(function(data) {
     // console.log('Device variable retrieved successfully:', data);
@@ -98,9 +100,12 @@ function logSuccess(data) {
     // console.log('An error occurred while getting attrs:', err);
   });
 
-  particle.getEventStream({ deviceId: deviceOneId, auth: token }).then(function(stream) {
-  stream.on('state', stateMover)
-  });
+  particle.getEventStream({ deviceId: deviceOneId, auth: token, name:'state' }).then(function(stream) {
+    console.log("justin hates this");
+  stream.on('event', stateMover)
+}, function(err) {
+  console.log("error setting")
+});
 
 }
 
@@ -155,6 +160,7 @@ function claimDeviceTwo(data) {
 
 function doneClaimingDevices() {
  console.log("Done Claiming Devices");
+ alert("Successfuly created! Go back and login")
 }
 
 function errorClaimingDevices() {
@@ -169,17 +175,22 @@ var name;
 var currentStateDoor;
 // statemover function that is called when eventStream is received
 function stateMover(data) {
+  console.log("in");
   // if we've already called the door , just use data.data
   if(fsmCalled == true) {
     currentStateDoor = data.data;
+    console.log("truething");
+    console.log("this is the " + currentStateDoor);
   }
   // if we have not already called the door (meaning this is the first time) , use data.body.result and convert it to a string
   if(fsmCalled == false) {
     // set state of FSM = true
+    console.log("falsething")
     fsmCalled = true;
     currentStateDoor = data.body.result;
     // convert to a string
     currentStateDoor = currentStateDoor.toString();
+    console.log(currentStateDoor);
   }
 
   // console.log(data.data);
@@ -228,7 +239,6 @@ function stateMover(data) {
       // if (autoTimer == true) {
       //        timer = setTimeout(autoClose, timeValue*1000);
       // }
-
 
     break;
 
@@ -284,7 +294,9 @@ if(currentStateDoor==6) {
   argument = "press";
 }
 // callFunction WebButton (in C) when we have a press (if error, use Error press then)
+console.log("1 "+token);
         var moveState = particle.callFunction({ deviceId: deviceId, name: 'webButton', argument:argument, auth: token });
+        console.log("2 "+token);
         moveState.then(
         function(data) {
           console.log('Function called succesfully:', data);

@@ -73,7 +73,7 @@ function logSuccess(data) {
   }, function(err) {
     // console.log('An error occurred while getting attrs:', err);
   });
-
+  document.getElementById("create-page").style.display="none";
   displayElement("login-page","main-page");
 
   particle.getVariable({ deviceId: deviceId, name: "autoCloseOn", auth: token }).then(function(data) {
@@ -130,6 +130,8 @@ document.getElementById("complete-creation-btn").addEventListener("click",functi
 
     return particle.claimDevice({deviceId:deviceOneId, requestTransfer:true, auth:customerToken})
    }
+
+   particle.login({username: email, password: password}).then(logSuccess, logFail)
 
 });
 var customerToken = "LEAVE ALONE";

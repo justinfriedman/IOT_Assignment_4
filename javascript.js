@@ -102,7 +102,7 @@ function logSuccess(data) {
 
   particle.getEventStream({ deviceId: deviceOneId, auth: token, name:'state' }).then(function(stream) {
     console.log("justin hates this");
-  stream.on('event', stateMover)
+  stream.on('state', stateMover)
 }, function(err) {
   console.log("error setting")
 });
